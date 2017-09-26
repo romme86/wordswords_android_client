@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        /* TODO(developer): Configure to sign app with a release key for testing.
+        release {
+            storeFile file('path/to/release/signing/key')
+            keyAlias 'release_key_alias'
+            keyPassword "${password}"
+            storePassword "${password}"
+        }*/
+    }
+    compileSdkVersion 26
+    buildToolsVersion '26.0.0'
+
+    defaultConfig {
+        applicationId "elbadev.com.wordswords"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 7
+        versionName "1.5"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // TODO(developer): uncomment below once config above is complete and uncommented.
+            // signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'io.socket:socket.io-client:0.8.3'
+    compile 'com.android.support:design:26.1.0'
+}

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTintMode="screen"
+    android:baselineAligned="false"
+    android:elevation="1dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-3dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg1" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp">
+
+        <ImageView
+            android:id="@+id/tocca"
+            android:layout_width="39dp"
+            android:layout_height="586dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:elevation="5dp"
+            app:srcCompat="?attr/actionModeShareDrawable" />
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top|center"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:weightSum="1">
+
+        <elbadev.com.wordswords.TypeWriter
+            android:id="@+id/title_login"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:text="Wordswords"
+            android:textColor="@color/giallino_titoli"
+            android:textSize="30sp" />
+
+        <EditText
+            android:id="@+id/email"
+            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+            android:layout_width="300dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="20dp"
+            android:digits="abcdefghijklmnopqrstuvwxyz"
+            android:ems="10"
+            android:hint="Username"
+
+            android:inputType="textPersonName"
+            android:maxLength="15"
+            android:shadowColor="@android:color/darker_gray"
+            android:textAlignment="center"
+            android:textColor="@color/giallino_titoli" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="300dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:textColorLink="@color/giallino_bottone" />
+
+        <Button
+            android:id="@+id/button_salva"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginBottom="20sp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="20sp"
+            android:background="@drawable/bottone"
+            android:text="Accedi"
+            android:textAlignment="center"
+            android:textColor="@color/giallino" />
+
+        <Button
+            android:id="@+id/button_registra"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:background="@drawable/bottone"
+            android:text="Registrati"
+            android:textAlignment="center"
+            android:textColor="@color/giallino" />
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navi"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/manu_bg"
+        android:choiceMode="singleChoice"
+        android:elevation="1dp">
+
+        <Button
+            android:id="@+id/button_chiudi"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/bottone"
+            android:text="Chiudi"
+            android:textAlignment="center"
+            android:textColor="@color/giallino" />
+        <Button
+            android:id="@+id/button_compra"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="120dp"
+            android:background="@drawable/bottone"
+            android:text="Compra"
+            android:textAlignment="center"
+            android:textColor="@color/giallino" />
+
+        <elbadev.com.wordswords.TypeWriter
+            android:id="@+id/title_turn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:text="Turno"
+            android:textColor="@color/giallino_titoli"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <elbadev.com.wordswords.TypeWriter
+            android:id="@+id/title_giocatori_online"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="220dp"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:text="Giocatori Online"
+            android:textColor="@color/giallino_titoli"
+            android:textSize="15sp" />
+
+        <elbadev.com.wordswords.TypeWriter
+            android:id="@+id/title_scores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="240dp"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:text="Punti"
+            android:textColor="@color/giallino_titoli"
+            android:textSize="15sp"
+            android:visibility="gone" />
+    </android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>

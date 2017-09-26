@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="The King Of The North"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+    <Button
+        android:id="@+id/button_friend"
+        android:layout_width="246dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Cerca Amico" />
+
+    <EditText
+        android:id="@+id/friend_text"
+        android:layout_width="246dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30px"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Email Amico"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_trova"
+        android:layout_width="247dp"
+        android:layout_height="wrap_content"
+        android:text="Trova"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_casual"
+        android:layout_width="247dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Cerca Avversario Casuale" />
+
+    <Button
+        android:id="@+id/button_exit"
+        android:layout_width="244dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Esci dalla Partita" />
+
+</LinearLayout>
