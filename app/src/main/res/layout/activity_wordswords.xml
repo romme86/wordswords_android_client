@@ -140,37 +140,6 @@
             android:textAlignment="center"
             android:textColor="@color/giallino" />
 
-        <elbadev.com.wordswords.TypeWriter
-            android:id="@+id/title_turn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
-            android:gravity="center_vertical|center_horizontal|center"
-            android:text="Turno"
-            android:textColor="@color/giallino_titoli"
-            android:textSize="15sp"
-            android:visibility="gone" />
-
-        <elbadev.com.wordswords.TypeWriter
-            android:id="@+id/title_giocatori_online"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="220dp"
-            android:gravity="center_vertical|center_horizontal|center"
-            android:text="Giocatori Online"
-            android:textColor="@color/giallino_titoli"
-            android:textSize="15sp" />
-
-        <elbadev.com.wordswords.TypeWriter
-            android:id="@+id/title_scores"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="240dp"
-            android:gravity="center_vertical|center_horizontal|center"
-            android:text="Punti"
-            android:textColor="@color/giallino_titoli"
-            android:textSize="15sp"
-            android:visibility="gone" />
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

@@ -8,13 +8,16 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +39,16 @@ import java.util.List;
 public class Game extends Activity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private AutoCompleteTextView invitables;
+    private String[] names = {
+        "gionni",
+        "alberto",
+        "cicciolina",
+        "cecilia",
+        "caterina",
+        "mariannagane",
 
+    };
     ListView lv;
     List<String> fruits_list = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
@@ -194,6 +206,7 @@ public class Game extends Activity {
 
             try
             {
+                
                 System.out.println("WORDSWORDS_LOG: Ricezione dal Server della lista utenti in partita " + obj.getString("utenti"));
                 Bundle bibbo = new Bundle();
                 bibbo.putString("lista" , obj.getString("utenti"));
@@ -303,6 +316,10 @@ public class Game extends Activity {
 
             }
         });
+        invitables = (AutoCompleteTextView) findViewById(R.id.invitables);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
+        invitables.setThreshold(1);
+        invitables.setAdapter(adapter);
 
         //Gestione Pulsante Cerca Amico
 
@@ -346,7 +363,17 @@ public class Game extends Activity {
             }
         });
 
+        ImageView btn_toc = (ImageView) findViewById(R.id.tocca_game);
+        btn_toc.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
 
+                DrawerLayout dl = (DrawerLayout)findViewById(R.id.drawer_layout_game);
+                dl.openDrawer(Gravity.LEFT);
+
+            }
+        });
         //Inizia Partita
 
         Button bstart = (Button) findViewById(R.id.bottone_start);

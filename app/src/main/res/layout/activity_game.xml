@@ -60,6 +60,12 @@
                 android:textSize="30sp"
                 android:textStyle="bold|italic" />
 
+            <AutoCompleteTextView
+                android:id="@+id/invitables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="cerca il tuo amico" />
+
             <EditText
                 android:id="@+id/friend_text"
                 android:layout_width="match_parent"
@@ -72,7 +78,6 @@
                 android:inputType="textPersonName"
                 android:maxLength="14"
                 android:selectAllOnFocus="false"
-                android:singleLine="false"
                 android:visibility="gone" />
 
             <Button
