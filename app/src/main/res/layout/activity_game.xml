@@ -20,7 +20,20 @@
         android:layout_marginTop="-3dp"
         android:scaleType="centerCrop"
         android:src="@drawable/bg3" />
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp">
 
+        <ImageView
+            android:id="@+id/tocca_game"
+            android:layout_width="39dp"
+            android:layout_height="586dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:elevation="5dp"
+            android:src="@drawable/ribbon" />
+    </GridLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"

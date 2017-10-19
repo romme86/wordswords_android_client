@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -18,6 +19,8 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -393,7 +396,12 @@ public class DashBoard extends Activity {
         {
             LinearLayout rux = (LinearLayout) findViewById(R.id.rules);
             rux.setVisibility(LinearLayout.VISIBLE);
+
+        }else{
+            final GridLayout ribbon = (GridLayout) findViewById(R.id.ribbon);
+            ribbon.setVisibility(LinearLayout.VISIBLE);
         }
+
 
 
         GlobalState.getmSocket().connect();
@@ -582,7 +590,17 @@ public class DashBoard extends Activity {
 
             }
         });
+        ImageView btn_toc = (ImageView) findViewById(R.id.tocca_dash);
+        btn_toc.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
 
+                DrawerLayout dl = (DrawerLayout)findViewById(R.id.drawer_layout_dashboard);
+                dl.openDrawer(Gravity.LEFT);
+
+            }
+        });
 
         //CHIUDI REGOLE
         final Button bottone_close_rul = (Button) findViewById(R.id.button_okregole);
@@ -594,8 +612,10 @@ public class DashBoard extends Activity {
              //   GlobalState.getButtonSound().start();
 
                 final LinearLayout rilo = (LinearLayout) findViewById(R.id.rules);
-
                 rilo.setVisibility(LinearLayout.GONE);
+                final GridLayout ribbon = (GridLayout) findViewById(R.id.ribbon);
+                ribbon.setVisibility(LinearLayout.VISIBLE);
+
                 GlobalState.setSofia(true);
 
 
