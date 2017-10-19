@@ -314,7 +314,11 @@ public class Game extends Activity {
         });
         invitables = (AutoCompleteTextView) findViewById(R.id.invitables);
         names = GlobalState.getUtenti_online();
+
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
+        ListView lv;
+        lv = (ListView) findViewById(R.id.lista_online_game);
+        lv.setAdapter(adapter);
         invitables.setThreshold(1);
         invitables.setAdapter(adapter);
 
@@ -325,7 +329,8 @@ public class Game extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 GlobalState.getButtonSound().start();
-                final TextView tv = (TextView) findViewById(R.id.friend_text);
+
+                final TextView tv = (TextView) findViewById(R.id.invitables);
                 tv.setVisibility(View.VISIBLE);
 
                 Button button2 = (Button) findViewById(R.id.button_trova);

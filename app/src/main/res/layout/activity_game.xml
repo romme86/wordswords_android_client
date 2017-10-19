@@ -64,20 +64,8 @@
                 android:id="@+id/invitables"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="cerca il tuo amico" />
-
-            <EditText
-                android:id="@+id/friend_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
-                android:digits="abcdefghijklmnopqrstuvwxyz"
-                android:ems="10"
                 android:gravity="center"
-                android:hint="Username Amico"
-                android:inputType="textPersonName"
-                android:maxLength="14"
-                android:selectAllOnFocus="false"
+                android:hint="cerca il tuo amico"
                 android:visibility="gone" />
 
             <Button
@@ -246,7 +234,7 @@
                     android:textSize="15sp" />
 
                 <ListView
-                    android:id="@+id/lista_online"
+                    android:id="@+id/lista_online_game"
                     android:layout_width="match_parent"
                     android:layout_height="333dp"
                     android:textAlignment="center" />
