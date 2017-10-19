@@ -126,6 +126,7 @@ public class DashBoard extends Activity {
 
 
             final Bundle bobbo = message.getData();
+
             System.out.println("WORDSWORDS_LOG: Lista Utenti online " +  bobbo.getString("lista"));
             String zimba = bobbo.getString("lista");
             lv.setAdapter(null);
@@ -142,6 +143,8 @@ public class DashBoard extends Activity {
 
             System.out.println("WORDSWORDS_LOG: Lista Utenti online quattro ");
             String[] spirit = zimba.split("___");
+
+            GlobalState.setUtenti_online(spirit);
 
             for(int i = 0; i < spirit.length; i++) {
                 lista_gamers.add(spirit[i]);

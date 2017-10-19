@@ -40,14 +40,10 @@ public class Game extends Activity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private AutoCompleteTextView invitables;
-    private String[] names = {
-        "gionni",
-        "alberto",
-        "cicciolina",
-        "cecilia",
-        "caterina",
-        "mariannagane",
 
+
+    private String[] names = {
+        "gionni"
     };
     ListView lv;
     List<String> fruits_list = new ArrayList<>();
@@ -317,6 +313,7 @@ public class Game extends Activity {
             }
         });
         invitables = (AutoCompleteTextView) findViewById(R.id.invitables);
+        names = GlobalState.getUtenti_online();
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
         invitables.setThreshold(1);
         invitables.setAdapter(adapter);

@@ -48,7 +48,7 @@ public class GlobalState extends Application {
     static private Boolean abbasta = false;
     static private Boolean sofia = false;
     static private Integer miei_punti = 0;
-
+    static private String utenti_online[] = null ;
     static private String vincitore;
     static private Integer punti_vincitore;
 
@@ -303,6 +303,14 @@ public class GlobalState extends Application {
 
     public static void setMiei_punti(Integer miei_punti) {
         GlobalState.miei_punti = miei_punti;
+    }
+
+    public static String[] getUtenti_online() {
+        return utenti_online;
+    }
+
+    public static void setUtenti_online(String[] utenti_online) {
+        GlobalState.utenti_online = utenti_online;
     }
 
     @Override
