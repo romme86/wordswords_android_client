@@ -114,8 +114,8 @@ public class Pay extends Activity implements IabBroadcastReceiver.IabBroadcastLi
     String mSelectedSubscriptionPeriod = "";
 
     // SKUs for our products: the premium upgrade (non-consumable) and gas (consumable)
-    static final String SKU_PREMIUM = "premium";
-    static final String SKU_GAS = "gas";
+    static final String SKU_PREMIUM = "fogli_di_carta";
+    static final String SKU_GAS = "bigliettino";
 
     // SKU for our subscription (infinite gas)
     static final String SKU_INFINITE_GAS_MONTHLY = "infinite_gas_monthly";

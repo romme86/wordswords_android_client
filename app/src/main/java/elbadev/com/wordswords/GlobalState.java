@@ -17,8 +17,10 @@ import java.util.Random;
 public class GlobalState extends Application {
 
     static private Socket mSocket;
+    private static Boolean setup_payment_done = false;
     private static String address = "http://46.101.105.29/" ;//SERVER REMOTO
    //private static String address = "http://192.168.1.35:3000/";//SERVER UFFICIO
+//   private static final String base64EncodePublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApCM/a4Nn5xBE3fFeSrOv3QqiA7IoCfy08x9BRP7PrmP9PgDihCLAPjR+5BeUy7cIl4kIayUVAd0qZcccDdgSMkgkx5jBexGDyrDpUkaybGVvWIDZ3SKidp9JxFwDE5zyFn52NNy3Sp/+k/walE2c+3YV5QA8p1OF/2qV71cYuCploU5vX1LXYmu6NEG77lccZ2gQKC3VwrBUCKuZnoSUBdfqtn1gzhJmb7h1f1LKdNwz7vwJtux5N0IRouPHkFwuX7CRbmZBhocRbLR5kge5NUhibY4FBNCFUUSN967qmo+v69fZcrY6cSpAIdtuOJKHDcULZCJMf/62ARwiN/sFHQIDAQAB";
     private static final String base64EncodePublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApCM/a4Nn5xBE3fFeSrOv3QqiA7IoCfy08x9BRP7PrmP9PgDihCLAPjR+5BeUy7cIl4kIayUVAd0qZcccDdgSMkgkx5jBexGDyrDpUkaybGVvWIDZ3SKidp9JxFwDE5zyFn52NNy3Sp/+k/walE2c+3YV5QA8p1OF/2qV71cYuCploU5vX1LXYmu6NEG77lccZ2gQKC3VwrBUCKuZnoSUBdfqtn1gzhJmb7h1f1LKdNwz7vwJtux5N0IRouPHkFwuX7CRbmZBhocRbLR5kge5NUhibY4FBNCFUUSN967qmo+v69fZcrY6cSpAIdtuOJKHDcULZCJMf/62ARwiN/sFHQIDAQAB";
     static private Integer richiesteVolleyInCorso = 0;
     static private MediaPlayer typewriter_button_sound_0;
@@ -311,6 +313,14 @@ public class GlobalState extends Application {
 
     public static void setUtenti_online(String[] utenti_online) {
         GlobalState.utenti_online = utenti_online;
+    }
+
+    public static Boolean getSetup_payment_done() {
+        return setup_payment_done;
+    }
+
+    public static void setSetup_payment_done(Boolean setup_payment_done) {
+        GlobalState.setup_payment_done = setup_payment_done;
     }
 
     @Override

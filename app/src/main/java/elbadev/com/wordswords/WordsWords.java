@@ -1,6 +1,7 @@
 package elbadev.com.wordswords;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -62,6 +64,11 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
     private ActionBarDrawerToggle mDrawerToggle;
     private IabHelper mHelper;
     private IabBroadcastReceiver mBroadcastReceiver;
+    private IInAppBillingService mService;
+    private String prezzo_bigliettino = "";
+    private String prezzo_fogli_di_carta = "";
+
+
     @Override
     public void onBackPressed() {
         Toast.makeText(this, GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_SHORT).show();
@@ -166,6 +173,27 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        final ServiceConnection mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mService = null;
+            }
+
+            @Override
+            public void onServiceConnected(ComponentName name,
+                                           IBinder service) {
+                System.out.println("WORDSWORDS_LOG: Servizio connesso.");
+                mService = IInAppBillingService.Stub.asInterface(service);
+            }
+        };
+        Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        final boolean blnBind = bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        System.out.println("WORDSWORDS_LOG: Servizio bindato." + String.valueOf(blnBind));
+
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         FontsOverride.setDefaultFont(this, "DEFAULT", "OldNewspaperTypes.ttf");
@@ -196,8 +224,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
         final TypeWriter tw = (TypeWriter) findViewById(R.id.title_login);
         tw.setText("");
-      //  tw.animateText("Wordswords");
-        //GlobalState.getTypewriter_multi_sound().start();
+        tw.animateText("Wordswords");
+        GlobalState.getTypewriter_multi_sound().start();
 //        final Timer t = new Timer();
 //
 //        t.scheduleAtFixedRate(new TimerTask() {
@@ -241,6 +269,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         Button btn_compra = (Button) findViewById(R.id.button_compra);
 
 
+
         final IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
             @Override
             public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
@@ -257,6 +286,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                 }
 
                 System.out.println("WORDSWORDS_LOG: la query è un successone. " + result);
+                System.out.println("WORDSWORDS_LOG: inventario: " + inventory.getSkuDetails("fogli_di_carta"));
 
             /*
              * Check for items we own. Notice that for each purchase, we check
@@ -313,32 +343,47 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
             public void onClick(View v) {
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
-
-                mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                    @Override
-                    public void onIabSetupFinished(IabResult result) {
-                        if(!result.isSuccess()){
-                            System.out.println("WORDSWORDS_LOG: setup pagamento a puttane " + result.toString());
+                System.out.println("WORDSWORDS_LOG: cliccato compra");
+                try {
+                    int result = mService.isBillingSupported(3, getPackageName(), "inapp");
+                    System.out.println("WORDSWORDS_LOG: Servizio ok per inapp purchase? " + String.valueOf(result));
+                }catch (RemoteException e){
+                    e.printStackTrace();
+                }
+                if(!GlobalState.getSetup_payment_done()){
+                    mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                        @Override
+                        public void onIabSetupFinished(IabResult result) {
+                            if(!result.isSuccess()){
+                                System.out.println("WORDSWORDS_LOG: setup pagamento a puttane " + result.toString());
+                            }else{
+                                System.out.println("WORDSWORDS_LOG: setup pagamento ok");
+                                GlobalState.setSetup_payment_done(true);
+                            }
+                            System.out.println("WORDSWORDS_LOG: setup pagamento ok " + result.toString());
+                            if (mHelper == null) return;
+                            mBroadcastReceiver = new IabBroadcastReceiver(WordsWords.this);
+                            IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+                            registerReceiver(mBroadcastReceiver, broadcastFilter);
+                            try {
+                                System.out.println("WORDSWORDS_LOG: provo query inventario ");
+                                mHelper.queryInventoryAsync(mGotInventoryListener);
+                            } catch (IabHelper.IabAsyncInProgressException e) {
+                                System.out.println("WORDSWORDS_LOG: Error querying inventory. Another async operation in progress.");
+                            }
                         }
-                        System.out.println("WORDSWORDS_LOG: setup pagamento ok " + result.toString());
-                        if (mHelper == null) return;
-                        mBroadcastReceiver = new IabBroadcastReceiver(WordsWords.this);
-                        IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
-                        registerReceiver(mBroadcastReceiver, broadcastFilter);
-                        try {
-                            System.out.println("WORDSWORDS_LOG: provo query inventario ");
-                            mHelper.queryInventoryAsync(mGotInventoryListener);
-                        } catch (IabHelper.IabAsyncInProgressException e) {
-                            System.out.println("WORDSWORDS_LOG: Error querying inventory. Another async operation in progress.");
-                        }
-                    }
 
-                });
-
-                //TODO distruggi mHelper dopo acquisto: mHelper = null se diverso da null
+                    });
+                }
+                System.out.println("WORDSWORDS_LOG: chiedo di vedere il negozio di: " + getPackageName());
+                //questa va fatto in altro tred
+                UnDueTred tred = new UnDueTred(mService);
+                tred.doInBackground();
+                //diotred
 
             }
         });
+
         ImageView btn_toc = (ImageView) findViewById(R.id.tocca);
         btn_toc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -464,7 +509,11 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                //RISCHIOSO
+                if (mService != null) {
+                    unbindService(mServiceConn);
+                }
+                //FINE RISCHIOSO
                 JSONObject pino = postParam;
                 System.out.println("WORDSWORDS_LOG: JSON OUTPUT->" + pino.toString());
 
@@ -516,6 +565,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                 mRequestQueue.add(jsonObjReq);
 
             }
+
         });
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
