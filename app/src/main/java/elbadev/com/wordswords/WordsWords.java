@@ -1,9 +1,11 @@
 package elbadev.com.wordswords;
 
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -24,7 +26,9 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +71,10 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
     private IInAppBillingService mService;
     private String prezzo_bigliettino = "";
     private String prezzo_fogli_di_carta = "";
+    private String id_fogli_di_carta = "";
+    private String id_bigliettino = "";
+    private String id_block_notes = "";
+    private String prezzo_block_notes;
 
 
     @Override
@@ -249,6 +257,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 //                              },
 //                3000,
 //                40000);
+        final GridLayout ribbon = (GridLayout) findViewById(R.id.ribbon);
+        final LinearLayout buy_panel = (LinearLayout) findViewById(R.id.buy_panel);
         Button btn_chiudi = (Button) findViewById(R.id.button_chiudi);
         btn_chiudi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -260,13 +270,6 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
             }
         });
-        ArrayList<String> sku_list = new ArrayList<>();
-        sku_list.add("fogli_di_carta");
-        final Bundle query_sku = new Bundle();
-        query_sku.putStringArrayList("ITEM_ID_LIST",sku_list);
-
-        mHelper = new IabHelper(this,GlobalState.getBase64publicKey());
-        Button btn_compra = (Button) findViewById(R.id.button_compra);
 
 
 
@@ -338,49 +341,145 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 //                Log.d(TAG, "Initial inventory query finished; enabling main UI.");
             }
         };
+        mHelper = new IabHelper(this,GlobalState.getBase64publicKey());
+        if(!GlobalState.getSetup_payment_done()){
+            mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                @Override
+                public void onIabSetupFinished(IabResult result) {
+                    if(!result.isSuccess()){
+                        System.out.println("WORDSWORDS_LOG: setup pagamento a puttane " + result.toString());
+                    }else{
+                        System.out.println("WORDSWORDS_LOG: setup pagamento ok");
+                        GlobalState.setSetup_payment_done(true);
+                    }
+                    System.out.println("WORDSWORDS_LOG: setup pagamento ok " + result.toString());
+                    if (mHelper == null) return;
+                    mBroadcastReceiver = new IabBroadcastReceiver(WordsWords.this);
+                    IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
+                    registerReceiver(mBroadcastReceiver, broadcastFilter);
+                    try {
+                        System.out.println("WORDSWORDS_LOG: provo query inventario ");
+                        mHelper.queryInventoryAsync(mGotInventoryListener);
+                    } catch (IabHelper.IabAsyncInProgressException e) {
+                        System.out.println("WORDSWORDS_LOG: Error querying inventory. Another async operation in progress.");
+                    }
+                }
 
-        btn_compra.setOnClickListener(new View.OnClickListener() {
+            });
+        }
+
+        Button button_compra_fogli = (Button) findViewById(R.id.button_compra_fogli);
+        button_compra_fogli.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
-                System.out.println("WORDSWORDS_LOG: cliccato compra");
                 try {
                     int result = mService.isBillingSupported(3, getPackageName(), "inapp");
                     System.out.println("WORDSWORDS_LOG: Servizio ok per inapp purchase? " + String.valueOf(result));
                 }catch (RemoteException e){
                     e.printStackTrace();
                 }
-                if(!GlobalState.getSetup_payment_done()){
-                    mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                        @Override
-                        public void onIabSetupFinished(IabResult result) {
-                            if(!result.isSuccess()){
-                                System.out.println("WORDSWORDS_LOG: setup pagamento a puttane " + result.toString());
-                            }else{
-                                System.out.println("WORDSWORDS_LOG: setup pagamento ok");
-                                GlobalState.setSetup_payment_done(true);
-                            }
-                            System.out.println("WORDSWORDS_LOG: setup pagamento ok " + result.toString());
-                            if (mHelper == null) return;
-                            mBroadcastReceiver = new IabBroadcastReceiver(WordsWords.this);
-                            IntentFilter broadcastFilter = new IntentFilter(IabBroadcastReceiver.ACTION);
-                            registerReceiver(mBroadcastReceiver, broadcastFilter);
-                            try {
-                                System.out.println("WORDSWORDS_LOG: provo query inventario ");
-                                mHelper.queryInventoryAsync(mGotInventoryListener);
-                            } catch (IabHelper.IabAsyncInProgressException e) {
-                                System.out.println("WORDSWORDS_LOG: Error querying inventory. Another async operation in progress.");
-                            }
-                        }
-
-                    });
+                try {
+                    Bundle buyIntentBundle = mService.getBuyIntent(3, "elbadev.com.wordswords",id_fogli_di_carta, "inapp", "fogli_di_carta");
+                    PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                    startIntentSenderForResult(pendingIntent.getIntentSender(),1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),Integer.valueOf(0));
+                }catch (RemoteException e){
+                    e.printStackTrace();
+                }catch (IntentSender.SendIntentException e){
+                    e.printStackTrace();
                 }
+
+            }
+        });
+        Button button_compra_bigliettino = (Button) findViewById(R.id.button_compra_bigliettino);
+        button_compra_bigliettino.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
+                System.out.println("WORDSWORDS_LOG: cliccato compra bigliettino");
+                try {
+                    Bundle buyIntentBundle = mService.getBuyIntent(3, "elbadev.com.wordswords",id_bigliettino, "inapp", "bigliettino");
+                    PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                    startIntentSenderForResult(pendingIntent.getIntentSender(),1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),Integer.valueOf(0));
+                }catch (RemoteException e){
+                    e.printStackTrace();
+                }catch (IntentSender.SendIntentException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        Button button_compra_block_notes = (Button) findViewById(R.id.button_compra_block_notes);
+        button_compra_block_notes.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
+                System.out.println("WORDSWORDS_LOG: cliccato compra button_compra_block_notes");
+                try {
+                    Bundle buyIntentBundle = mService.getBuyIntent(3, "elbadev.com.wordswords",id_block_notes, "inapp", "id_block_notes");
+                    PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                    startIntentSenderForResult(pendingIntent.getIntentSender(),1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),Integer.valueOf(0));
+                }catch (RemoteException e){
+                    e.printStackTrace();
+                }catch (IntentSender.SendIntentException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        Button btn_compra = (Button) findViewById(R.id.button_compra);
+        btn_compra.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
+                System.out.println("WORDSWORDS_LOG: cliccato compra");
+                buy_panel.setVisibility(LinearLayout.VISIBLE);
+                ribbon.setVisibility(LinearLayout.GONE);
                 System.out.println("WORDSWORDS_LOG: chiedo di vedere il negozio di: " + getPackageName());
                 //questa va fatto in altro tred
                 UnDueTred tred = new UnDueTred(mService);
-                tred.doInBackground();
+                Bundle skuDetails = new Bundle();
+                skuDetails = tred.doInBackground();
                 //diotred
-
+                try {
+                    int response = skuDetails.getInt("RESPONSE_CODE");
+                    if (response == 0) {
+                        ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
+                        System.out.println("WORDSWORDS_LOG: entro nel negozio. numero oggetti: " + responseList.size());
+                        for (String thisResponse : responseList) {
+                            JSONObject object = new JSONObject(thisResponse);
+                            String sku = object.getString("productId");
+                            String price = object.getString("price");
+                            if (sku.equals("bigliettino")) {
+                                prezzo_bigliettino = price;
+                                id_bigliettino = sku;
+                                System.out.println("WORDSWORDS_LOG: bigliettino. ID " + id_bigliettino + " PREZZO " + prezzo_bigliettino);
+                            } else if (sku.equals("fogli_di_carta")) {
+                                prezzo_fogli_di_carta = price;
+                                id_fogli_di_carta = sku;
+                                System.out.println("WORDSWORDS_LOG: fogli. ID " + id_fogli_di_carta + " PREZZO " + prezzo_fogli_di_carta);
+                            }else if (sku.equals("block_notes")) {
+                                prezzo_block_notes = price;
+                                id_block_notes = sku;
+                                System.out.println("WORDSWORDS_LOG: block notes. ID " + id_block_notes + " PREZZO " + prezzo_block_notes);
+                            }
+                        }
+                    }
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                mDrawerLayout.closeDrawers();
+            }
+        });
+        Button button_indietro = (Button) findViewById(R.id.button_indietro);
+        button_indietro.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
+                System.out.println("WORDSWORDS_LOG: cliccato indietro");
+                buy_panel.setVisibility(LinearLayout.GONE);
+                ribbon.setVisibility(LinearLayout.VISIBLE);
             }
         });
 
@@ -616,7 +715,28 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
         return true;
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("WORDSWORDS_LOG: sei arrivato a onActivityResult!");
+        if (requestCode == 1001) {
 
+            int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+            String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
+            System.out.println("WORDSWORDS_LOG: il codice era 1001! il result code é " + resultCode + " il response code é " + responseCode + " inapp sig " + dataSignature);
+            if (resultCode == RESULT_OK) {
+                try {
+                    JSONObject jo = new JSONObject(purchaseData);
+                    String sku = jo.getString("productId");
+                    System.out.println("WORDSWORDS_LOG: You have bought the " + sku + ". Excellent choice,adventurer!");
+                }
+                catch (JSONException e) {
+                    System.out.println("WORDSWORDS_LOG: Failed to parse purchase data.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     @Override
     public void receivedBroadcast() {
 

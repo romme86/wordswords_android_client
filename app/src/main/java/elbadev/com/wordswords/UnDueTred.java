@@ -1,4 +1,5 @@
 package elbadev.com.wordswords;
+import android.app.PendingIntent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -26,36 +27,18 @@ public class UnDueTred extends AsyncTask<Void,Void,Bundle> {
         ArrayList<String> skuList = new ArrayList<String> ();
         skuList.add("fogli_di_carta");
         skuList.add("bigliettino");
+        skuList.add("block_notes");
         Bundle querySkus = new Bundle();
         Bundle skuDetails = new Bundle();
         querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
         try {
             skuDetails = mService.getSkuDetails(3, "elbadev.com.wordswords", "inapp", querySkus);
-            int response = skuDetails.getInt("RESPONSE_CODE");
-            if (response == 0) {
-                ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
-                System.out.println("WORDSWORDS_LOG: entro nel negozio. numero oggetti: " + responseList.size());
-                for (String thisResponse : responseList) {
-                    JSONObject object = new JSONObject(thisResponse);
-                    String sku = object.getString("productId");
-                    String price = object.getString("price");
-                    if (sku.equals("bigliettino")){
-                        prezzo_bigliettino = price;
-                        System.out.println("WORDSWORDS_LOG: bigliettino.");
-                    }
-                    else if (sku.equals("fogli_di_carta")){
-                        prezzo_fogli_di_carta = price;
-                        System.out.println("WORDSWORDS_LOG: fogli.");
-                    }
-                }
-            }
+
         }catch (RemoteException e){
             System.out.println("WORDSWORDS_LOG: Errore mentre cercavo di vedere cosa si puó comprare.");
             e.printStackTrace();
-        }catch (JSONException je){
-        System.out.println("WORDSWORDS_LOG: Errore mentre cercavo di vedere i prodotti.");
-        je.printStackTrace();
-    }
+        }
         return skuDetails;
     }
+
 }

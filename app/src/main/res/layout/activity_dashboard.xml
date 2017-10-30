@@ -41,116 +41,6 @@
             android:src="@drawable/ribbon" />
     </GridLayout>
 
-    <LinearLayout
-        android:id="@+id/rules"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/giallino"
-        android:elevation="2dp"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:weightSum="1">
-
-        <TextView
-            android:id="@+id/text_rules"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.24"
-            android:gravity="center_horizontal"
-            android:text="Come si gioca?"
-            android:textColor="@android:color/black"
-            android:textSize="30sp" />
-        <Button
-            android:id="@+id/button_okregole"
-            android:background="@drawable/bottone"
-            android:textAlignment="center"
-            android:textColor="@color/giallino"
-            android:textStyle="bold"
-            android:text="Ho Capito"
-            style="@android:style/Widget.Holo.Light.Button.Inset"
-            android:layout_width="200dp"
-            android:layout_height="59dp"
-            android:layout_marginBottom="0sp"
-            android:layout_marginLeft="80dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginTop="0sp"
-            android:elevation="0dp"
-            />
-        <TextView
-            android:id="@+id/rules1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:text="WordsWords é una battaglia tra scrittori, basata su fantasia e psicologia."
-            android:textAlignment="center" />
-        <TextView
-            android:id="@+id/rules2"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="Si gioca almeno in 3 quindi devi invitare degli amici o unirti ad una partita." />
-        <TextView
-            android:id="@+id/rules3"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="A tutti verrá data una frase ed ogni scrittore dovrá completarla." />
-        <TextView
-            android:id="@+id/rules4"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="Quando tutti avranno scritto il proprio finale ognuno dovrá scegliere il finale che ritiene quello originale." />
-        <TextView
-            android:id="@+id/rules5"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="Chi vota il finale giusto riceve 1 punto." />
-        <TextView
-            android:id="@+id/rules6"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="Se il proprio finale viene votato si riceve 1 punto." />
-        <TextView
-            android:id="@+id/rules7"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="Dopo 3 turni la partita finisce e lo scrittore con piú punti vince." />
-        <TextView
-            android:id="@+id/rules8"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_height="wrap_content"
-
-            android:textAlignment="center"
-            android:text="In bocca al lupo e affilate la penna, la fantasia e l'astuzia!" />
-
-
-    </LinearLayout>
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -237,6 +127,124 @@
             android:textAlignment="center"
             android:textColor="@color/giallino"
             android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rules"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/giallino"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/text_rules"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.24"
+            android:gravity="center_horizontal"
+            android:text="Come si gioca?"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/button_okregole"
+            style="@android:style/Widget.Holo.Light.Button.Inset"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginBottom="0sp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="0sp"
+            android:background="@drawable/bottone"
+            android:elevation="0dp"
+            android:text="Ho Capito"
+            android:textAlignment="center"
+            android:textColor="@color/giallino"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/rules1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+            android:text="WordsWords é una battaglia tra scrittori, basata su fantasia e psicologia."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="Si gioca almeno in 3 quindi devi invitare degli amici o unirti ad una partita."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="A tutti verrá data una frase ed ogni scrittore dovrá completarla."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="Quando tutti avranno scritto il proprio finale ognuno dovrá scegliere il finale che ritiene quello originale."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="Chi vota il finale giusto riceve 1 punto."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="Se il proprio finale viene votato si riceve 1 punto."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="Dopo 3 turni la partita finisce e lo scrittore con piú punti vince."
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/rules8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+
+            android:text="In bocca al lupo e affilate la penna, la fantasia e l'astuzia!"
+            android:textAlignment="center" />
+
 
     </LinearLayout>
 

@@ -24,6 +24,7 @@
         android:src="@drawable/bg1" />
 
     <GridLayout
+        android:id="@+id/ribbon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="5dp">
@@ -58,7 +59,6 @@
 
         <EditText
             android:id="@+id/email"
-            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
             android:layout_width="300dp"
             android:layout_height="42dp"
             android:layout_marginTop="20dp"
@@ -108,6 +108,116 @@
             android:textColor="@color/giallino" />
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buy_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/giallino"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/text_buy"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.24"
+            android:gravity="center_horizontal"
+            android:text="Cartoleria"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/button_compra_fogli"
+            style="@android:style/Widget.Holo.Light.Button.Inset"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginBottom="0sp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="0sp"
+            android:background="@drawable/bottone"
+            android:elevation="0dp"
+            android:text="fogli di carta"
+            android:textAlignment="center"
+            android:textColor="@color/giallino"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/rules1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+            android:text="Un rifornimento di fogli di carta che ti permetterá di giocare per sempre."
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/button_compra_bigliettino"
+            style="@android:style/Widget.Holo.Light.Button.Inset"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginBottom="0sp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="0sp"
+            android:background="@drawable/bottone"
+            android:elevation="0dp"
+            android:text="bigliettino"
+            android:textAlignment="center"
+            android:textColor="@color/giallino"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/rules4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+            android:text="Un bigliettino di carta su cui potrai scrivere fino a 10 frasi prima che si consumi."
+            android:textAlignment="center" />
+        <Button
+            android:id="@+id/button_compra_block_notes"
+            style="@android:style/Widget.Holo.Light.Button.Inset"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginBottom="0sp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="0sp"
+            android:background="@drawable/bottone"
+            android:elevation="0dp"
+            android:text="Block Notes"
+            android:textAlignment="center"
+            android:textColor="@color/giallino"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/rules2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="8dp"
+            android:text="Un Block Notes con cui potrai giocare 100 partite."
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/button_indietro"
+            style="@android:style/Widget.Holo.Light.Button.Inset"
+            android:layout_width="200dp"
+            android:layout_height="59dp"
+            android:layout_marginBottom="0sp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="0sp"
+            android:background="@drawable/bottone"
+            android:elevation="0dp"
+            android:text="indietro"
+            android:textAlignment="center"
+            android:textColor="@color/giallino"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
