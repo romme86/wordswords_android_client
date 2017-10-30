@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -79,7 +80,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_SHORT).show();
+        customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
         //super.onBackPressed();
     }
 
@@ -541,15 +542,18 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                                 try {
                                     if (response.length() != 0) {
                                         if (response.getInt("utente_registrato") == 1) {
-                                            Toast.makeText(WordsWords.this, "Ti sei registrato/a! Accedi per iniziare a giocare!", Toast.LENGTH_SHORT).show();
+                                            customToast("Ti sei registrato/a! Accedi per iniziare a giocare!",Toast.LENGTH_LONG);
+//                                            Toast.makeText(WordsWords.this, , Toast.LENGTH_SHORT).show();
                                             Button rec = (Button) findViewById(R.id.button_registra);
                                             rec.setVisibility(View.GONE);
                                         } else {
-                                            Toast.makeText(WordsWords.this, " Utente non registrato ", Toast.LENGTH_SHORT).show();
+                                            customToast("Questo utente non é registrato",Toast.LENGTH_LONG);
+//                                            Toast.makeText(WordsWords.this, " Utente non registrato ", Toast.LENGTH_SHORT).show();
                                             System.out.println("WORDSWORDS_LOG: Azz " + response);
                                         }
                                     } else {
-                                        Toast.makeText(WordsWords.this, "Nessun username immesso", Toast.LENGTH_SHORT).show();
+                                        customToast("Devi inserire uno username! (e poi anche la password)",Toast.LENGTH_LONG);
+//                                        Toast.makeText(WordsWords.this, "Nessun username immesso", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -559,7 +563,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
+                        customToast("Devi inserire Username e Password prima! É anche possibile che il server non risponda.",Toast.LENGTH_LONG);
+//                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
                         System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
 
                     }
@@ -636,7 +641,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                                         i.putExtra("token", response.getString("token"));
                                         startActivity(i);
                                     } else {
-                                        Toast.makeText(WordsWords.this, " Utente non esistente ", Toast.LENGTH_SHORT).show();
+                                        customToast("Questo utente non esiste, puoi registrarti cliccando su REGISTRATI",Toast.LENGTH_LONG);
+//                                        Toast.makeText(WordsWords.this, " Utente non esistente ", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -647,7 +653,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
+                        customToast("Sei hai premuto REGISTRATI, allora non hai inserito le credanziali! Altrimenti L'utente non esiste o il server non risponde.",Toast.LENGTH_LONG);
+//                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
                         System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
 
                     }
@@ -741,5 +748,18 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
     public void receivedBroadcast() {
 
     }
+    public void customToast(String text, int duration){
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.toast_layout,null);
+
+        TextView tv = (TextView) view.findViewById(R.id.custom_text);
+        tv.setText(text);
+        Toast custom_toast = new Toast(this);
+        custom_toast.setView(view);
+        custom_toast.makeText(WordsWords.this,text,duration);
+        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
+        custom_toast.show();
+    }
+
 }
 

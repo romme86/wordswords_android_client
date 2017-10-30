@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -44,7 +46,7 @@ public class WordsGame extends Activity {
 
     @Override
     public void onBackPressed(){
-        Toast.makeText(this,  GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_SHORT).show();
+        customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
         //super.onBackPressed();
     }
 
@@ -152,7 +154,7 @@ public class WordsGame extends Activity {
                     }
                     else if(GlobalState.getPosizione_lista() == -2)
                     {
-                        Toast.makeText(WordsGame.this, "devi scegliere un finale prima! ", Toast.LENGTH_SHORT).show();
+                        customToast("devi scegliere un finale prima! ",Toast.LENGTH_LONG);
                     }
                     else
                     {
@@ -358,12 +360,13 @@ public class WordsGame extends Activity {
 
                 if(position == GlobalState.getPosizione_mia_frase())
                 {
-                    Toast.makeText(WordsGame.this, "Non puoi Autovotarti Laidone!!!", Toast.LENGTH_SHORT).show();
+                    customToast("Non puoi Autovotarti Laidone!!! ",Toast.LENGTH_LONG);
+
                     GlobalState.setPosizione_lista(-2);
                 }
                 else
                 {
-                    Toast.makeText(WordsGame.this, "Ho pigiato " + position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(WordsGame.this, "Ho pigiato " + position, Toast.LENGTH_SHORT).show();
                     for (int i = 0; i < lv.getChildCount(); i++) {
                         View listItem = lv.getChildAt(i);
                         listItem.setBackgroundColor(Color.WHITE);
@@ -485,7 +488,7 @@ public class WordsGame extends Activity {
 
                 if(position == GlobalState.getPosizione_mia_frase())
                 {
-                    Toast.makeText(WordsGame.this, "Non puoi Autovotarti Laidone!!!", Toast.LENGTH_SHORT).show();
+                    customToast("Non puoi Autovotarti Laidone!!! ",Toast.LENGTH_LONG);
                     GlobalState.setPosizione_lista(-2);
                 }
                 else
@@ -559,6 +562,17 @@ public class WordsGame extends Activity {
 
 
     }
+    public void customToast(String text, int duration){
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.toast_layout,null);
 
+        TextView tv = (TextView) view.findViewById(R.id.custom_text);
+        tv.setText(text);
+        Toast custom_toast = new Toast(this);
+        custom_toast.setView(view);
+        custom_toast.makeText(WordsGame.this,text,duration);
+        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
+        custom_toast.show();
+    }
 
 }

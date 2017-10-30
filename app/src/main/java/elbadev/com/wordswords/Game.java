@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -231,7 +232,8 @@ public class Game extends Activity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this,  GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_SHORT).show();
+        customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
+
     }
 
 
@@ -344,7 +346,8 @@ public class Game extends Activity {
                         v.startAnimation(button_as);
                         GlobalState.getButtonSound().start();
                         if(tv.getText().toString().matches("")){
-                            Toast.makeText(Game.this,"Riempi il campo Username Amico con il nome del tuo amico.", Toast.LENGTH_SHORT).show();
+                            customToast("Riempi il campo Username Amico con il nome del tuo amico.",Toast.LENGTH_LONG);
+//                            Toast.makeText(Game.this,"Riempi il campo Username Amico con il nome del tuo amico.", Toast.LENGTH_SHORT).show();
                             System.out.println("WORDSWORDS_LOG: chiamato trova amico senza nome amico.");
                         }else{
                             GlobalState.getmSocket().emit("invita_in_partita", tv.getText());
@@ -383,7 +386,7 @@ public class Game extends Activity {
         bstart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(GlobalState.getAbbasta() == false) {
-                    Toast.makeText(Game.this, "Per iniziare dovete essere almeno in quattro, elefanti che si dondolavano sopra il filo di una ragnatela...", Toast.LENGTH_SHORT).show();
+                    customToast("Per iniziare dovete essere almeno in quattro, elefanti che si dondolavano sopra il filo di una ragnatela...",Toast.LENGTH_LONG);
                 }
                 else
                 {
@@ -428,7 +431,18 @@ public class Game extends Activity {
         mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
+    public void customToast(String text, int duration){
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.toast_layout,null);
 
+        TextView tv = (TextView) view.findViewById(R.id.custom_text);
+        tv.setText(text);
+        Toast custom_toast = new Toast(this);
+        custom_toast.setView(view);
+        custom_toast.makeText(Game.this,text,duration);
+        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
+        custom_toast.show();
+    }
 }
 
 

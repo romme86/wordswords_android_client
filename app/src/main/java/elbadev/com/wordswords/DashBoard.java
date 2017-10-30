@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -23,6 +24,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -64,7 +66,8 @@ public class DashBoard extends Activity {
 
     @Override
     public void onBackPressed(){
-        Toast.makeText(this,  GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_SHORT).show();
+        customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
+
         //super.onBackPressed();
     }
 
@@ -113,7 +116,7 @@ public class DashBoard extends Activity {
     private Handler handler_toast = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText(DashBoard.this, message.obj.toString(), Toast.LENGTH_SHORT).show();
+            customToast( message.obj.toString(),Toast.LENGTH_LONG);
         }
     };
 
@@ -645,7 +648,18 @@ public class DashBoard extends Activity {
 
     }
 
+    public void customToast(String text, int duration){
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.toast_layout,null);
 
+        TextView tv = (TextView) view.findViewById(R.id.custom_text);
+        tv.setText(text);
+        Toast custom_toast = new Toast(this);
+        custom_toast.setView(view);
+        custom_toast.makeText(DashBoard.this,text,duration);
+        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
+        custom_toast.show();
+    }
 }
 
 

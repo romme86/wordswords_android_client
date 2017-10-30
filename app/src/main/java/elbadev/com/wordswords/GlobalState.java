@@ -3,6 +3,9 @@ package elbadev.com.wordswords;
 import android.app.Application;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.text.Layout;
+import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -369,7 +372,7 @@ public class GlobalState extends Application {
             case 0:
                 return "Non ci torni indietro.";
             case 1:
-                return "Sempre andare avanti nella vita, e anche a WordsWords.";
+                return "Sempre andare avanti nella vita.";
             case 2:
                 return "Ricordati i punti in fondo alle frasi.";
             case 3:
@@ -377,7 +380,7 @@ public class GlobalState extends Application {
             case 4:
                 return "Ricordati sempre che sei una persona unica. Proprio come tutti gli altri.";
             case 5:
-                return "Se non hai niente di carino da dire su qualcuno, vieni a sederti accanto a me.";
+                return "Hai proprio un bel faccino!";
             case 6:
                 return "Mi dispiace ma se tu avessi ragione, sarei daccordo con te.";
             case 7:

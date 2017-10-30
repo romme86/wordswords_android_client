@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -41,7 +42,8 @@ public class ClassificaWordsGame extends Activity {
 
     @Override
     public void onBackPressed(){
-        Toast.makeText(this,  GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_SHORT).show();
+        customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
+
         //super.onBackPressed();
     }
 
@@ -434,7 +436,18 @@ public class ClassificaWordsGame extends Activity {
         });
 
     }
+    public void customToast(String text, int duration){
+        LayoutInflater li = getLayoutInflater();
+        View view = li.inflate(R.layout.toast_layout,null);
 
+        TextView tv = (TextView) view.findViewById(R.id.custom_text);
+        tv.setText(text);
+        Toast custom_toast = new Toast(this);
+        custom_toast.setView(view);
+        custom_toast.makeText(ClassificaWordsGame.this,text,duration);
+        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
+        custom_toast.show();
+    }
 
 }
 
