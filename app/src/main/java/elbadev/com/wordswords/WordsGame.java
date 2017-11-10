@@ -1,6 +1,7 @@
 package elbadev.com.wordswords;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -425,7 +427,6 @@ public class WordsGame extends Activity {
         tvg.upBound = 150;
         tvg.animateText(g.getStringExtra("prima_parte"));
 
-
         final Button scelta = (Button) findViewById(R.id.invia_scelta);
         final TextView wt = (TextView) findViewById(R.id.wait_text);
         final EditText edo = (EditText) findViewById(R.id.testo);
@@ -439,9 +440,18 @@ public class WordsGame extends Activity {
                 scelta.setVisibility(View.GONE);
                 wt.setVisibility(View.VISIBLE);
                 edo.setVisibility(View.GONE);
+                //nascondo la tastiera NUOVO_DA_TESTARE
+                System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
+
+                View view = WordsGame.this.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    System.out.println("WORDSWORDS_LOG: nascondo tastiera 2");
+                }
+
             }
         });
-
 
     }
 
@@ -557,6 +567,10 @@ public class WordsGame extends Activity {
                 scelta.setVisibility(View.GONE);
                 wt.setVisibility(View.VISIBLE);
                 edo.setVisibility(View.GONE);
+                System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
 

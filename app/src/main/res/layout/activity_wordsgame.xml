@@ -113,9 +113,9 @@
                     android:layout_marginTop="20sp"
                     android:background="@drawable/bottone"
                     android:elevation="0dp"
-                    android:textColor="@color/giallino"
-                    android:text="Invia la tua scelta"
+                    android:text="Invia la tua frase"
                     android:textAlignment="center"
+                    android:textColor="@color/giallino"
                     android:textStyle="bold" />
 
                 <TextView

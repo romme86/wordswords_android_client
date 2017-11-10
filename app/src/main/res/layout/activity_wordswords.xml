@@ -62,10 +62,11 @@
             android:layout_width="300dp"
             android:layout_height="42dp"
             android:layout_marginTop="20dp"
+            android:autoText="false"
             android:digits="abcdefghijklmnopqrstuvwxyz"
             android:ems="10"
-            android:hint="Username"
 
+            android:hint="Username"
             android:inputType="textPersonName"
             android:maxLength="15"
             android:shadowColor="@android:color/darker_gray"

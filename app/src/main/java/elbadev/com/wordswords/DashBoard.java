@@ -259,9 +259,6 @@ public class DashBoard extends Activity {
         }
     };
 
-
-
-
     //Nella disconnessione
     private Emitter.Listener on_disconnessione = new Emitter.Listener()
     {
@@ -271,7 +268,6 @@ public class DashBoard extends Activity {
             GlobalState.getmSocket().off();
         }
     };
-
 
     //Ricezione dal Server della lista utenti in partita da far vedere nella Listview
     private Emitter.Listener on_lista_utenti = new Emitter.Listener() {
@@ -283,7 +279,6 @@ public class DashBoard extends Activity {
 
         }
     };
-
 
     private Emitter.Listener on_entra_gioco = new Emitter.Listener() {
         @Override
@@ -320,11 +315,9 @@ public class DashBoard extends Activity {
 
             System.out.println("WORDSWORDS_LOG: Torno al menu da fine partita");
             Intent j = GlobalState.getDesktop();
-                j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                GlobalState.setTurno(1);
-                startActivityIfNeeded(j, 0);
-
-
+            j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            GlobalState.setTurno(1);
+            startActivityIfNeeded(j, 0);
         }
     };
 
@@ -422,17 +415,12 @@ public class DashBoard extends Activity {
 
         arrayAdapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, lista_gamers);
-
-
         // Assign adapter to ListView
         lv.setAdapter(arrayAdapter);
-
 
         // Add new Items to List
         lista_gamers.add(GlobalState.getMia_email());
         arrayAdapter.notifyDataSetChanged();
-
-
 
         final TypeWriter tw = (TypeWriter) findViewById(R.id.dashboard_title);
         tw.setText("");
@@ -461,9 +449,6 @@ public class DashBoard extends Activity {
             public void onClick(View v) {
                 v.startAnimation(button_as);
           //      GlobalState.getButtonSound().start();
-
-
-
             }
         });
         //GESTIONE SOCKET

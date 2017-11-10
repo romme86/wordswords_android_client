@@ -1,6 +1,11 @@
 package elbadev.com.wordswords;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +20,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -73,16 +79,13 @@ public class Game extends Activity {
             lv.setAdapter(null);
 
             String[] fruits = new String[]{};
-            System.out.println("WORDSWORDS_LOG: Lista Utenti Management due ");
             fruits_list = new ArrayList<String>(Arrays.asList(fruits));
             arrayAdapter = new ArrayAdapter<String>
                     (Game.this, android.R.layout.simple_list_item_1, fruits_list);
-            System.out.println("WORDSWORDS_LOG: Lista Utenti Management tre ");
 
             // Assign adapter to ListView
             lv.setAdapter(arrayAdapter);
 
-            System.out.println("WORDSWORDS_LOG: Lista Utenti Management quattro ");
                 String[] spirit = zimba.split(",");
 
                 for(int i = 0; i < spirit.length; i++) {
@@ -130,6 +133,7 @@ public class Game extends Activity {
         @Override
         public void call(Object... args) {
             System.out.println("WORDSWORDS_LOG: Utente Entrato");
+            customToast("un utente é entrato nella stanza!",Toast.LENGTH_LONG);
         }
     };
 
@@ -138,7 +142,7 @@ public class Game extends Activity {
     private Emitter.Listener on_amico_trovato = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-
+            customToast("un amico é entrato nella stanza!",Toast.LENGTH_LONG);
 
 
         }
@@ -236,6 +240,11 @@ public class Game extends Activity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshFriends(this);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -278,11 +287,16 @@ public class Game extends Activity {
         arrayAdapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, fruits_list);
 
+        //recupero gli amici dal db:
+        ArrayAdapter adapter_friends = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
+        ListView lva;
+        lva = (ListView) findViewById(R.id.lista_amici);
+        lva.setAdapter(adapter_friends);
+
+
 
         // Assign adapter to ListView
         lv.setAdapter(arrayAdapter);
-
-
         // Add new Items to List
         fruits_list.add(GlobalState.getMia_email());
         arrayAdapter.notifyDataSetChanged();
@@ -316,18 +330,89 @@ public class Game extends Activity {
         });
         invitables = (AutoCompleteTextView) findViewById(R.id.invitables);
         names = GlobalState.getUtenti_online();
-
+        final Context ctx = this;
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
-        ListView lv;
+        final ListView lv;
         lv = (ListView) findViewById(R.id.lista_online_game);
         lv.setAdapter(adapter);
+
         invitables.setThreshold(1);
         invitables.setAdapter(adapter);
 
+        new GetAllFriends((ListView) findViewById(R.id.lista_amici),this).execute(GlobalState.getDb());
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adattatore, final View componente, int pos, long id){
+                // qui dentro stabilisco cosa fare dopo il click
+                // chiedere se invitare o aggiungere agli amici
+                final String scrittore = (String)adattatore.getItemAtPosition(pos);
+                if(!scrittore.equals(GlobalState.getMia_email())){
+                    AlertDialog alert = new AlertDialog.Builder(Game.this).create();
+                    alert.setTitle("Invito di Gioco");
+                    alert.setMessage("Puoi invitare " + scrittore+ " in partita, oppure aggiungere " +  scrittore + " alla tua lista amici");
+                    alert.setButton(Dialog.BUTTON_NEGATIVE,"Aggiungi",new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
+                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+                            //in qualche modo la lista amici deve essere aggiornata dopo questo
+
+                        }
+                    });
+                    alert.setButton(Dialog.BUTTON_POSITIVE,"Invita",new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GlobalState.getmSocket().emit("invita_in_partita", scrittore);
+                            System.out.println("WORDSWORDS_LOG: Vuole invitare in partita  " );
+                        }
+                    });
+                    alert.show();
+                }else{
+                    customToast("non puoi aggiungerti o invitarti!",Toast.LENGTH_LONG);
+                }
+            }
+        });
+        ListView flv = findViewById(R.id.lista_amici);
+
+        flv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adattatore, final View componente, int pos, long id){
+                // qui dentro stabilisco cosa fare dopo il click
+                // chiedere se invitare o aggiungere agli amici
+                final String scrittore = (String)adattatore.getItemAtPosition(pos);
+//                if(!scrittore.equals(GlobalState.getMia_email())){
+                    AlertDialog alert = new AlertDialog.Builder(Game.this).create();
+                    alert.setTitle("Invito di Gioco");
+                    alert.setMessage("Vuoi invitare " + scrittore+ " in partita?");
+//                    alert.setButton(Dialog.BUTTON_NEGATIVE,"Aggiungi",new DialogInterface.OnClickListener(){
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
+//                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+//                            //in qualche modo la lista amici deve essere aggiornata dopo questo
+//                        }
+//                    });
+                    alert.setButton(Dialog.BUTTON_POSITIVE,"Invita",new DialogInterface.OnClickListener(){
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GlobalState.getmSocket().emit("invita_in_partita", scrittore);
+                            System.out.println("WORDSWORDS_LOG: Vuole invitare in partita  " );
+                        }
+                    });
+                    alert.show();
+//                }else{
+//                    customToast("non puoi aggiungerti o invitarti!",Toast.LENGTH_LONG);
+//                }
+            }
+        });
+
+
         //Gestione Pulsante Cerca Amico
-
         Button button = (Button) findViewById(R.id.button_friend);
-
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 GlobalState.getButtonSound().start();
@@ -379,23 +464,41 @@ public class Game extends Activity {
 
             }
         });
+
+        ImageView btn_toc_right = (ImageView) findViewById(R.id.tocca_game_2);
+        btn_toc_right.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("WORDSWORDS_LOG: apro dx: " );
+                v.startAnimation(button_as);
+                //GlobalState.getButtonSound().start();
+
+                DrawerLayout dl = (DrawerLayout)findViewById(R.id.drawer_layout_game);
+                dl.openDrawer(Gravity.RIGHT);
+
+            }
+        });
         //Inizia Partita
 
         Button bstart = (Button) findViewById(R.id.bottone_start);
 
         bstart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(GlobalState.getAbbasta() == false) {
-                    customToast("Per iniziare dovete essere almeno in quattro, elefanti che si dondolavano sopra il filo di una ragnatela...",Toast.LENGTH_LONG);
-                }
-                else
-                {
+//                if(GlobalState.getAbbasta() == false) {
+//                    customToast("Per iniziare dovete essere almeno in quattro, elefanti che si dondolavano sopra il filo di una ragnatela...",Toast.LENGTH_LONG);
+//                }
+//                else
+//                {
+//
+//                    v.startAnimation(button_as);
+//                    GlobalState.getButtonSound().start();
+//                    GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
+//                    GlobalState.setAbbasta(false);
+//                }
+                v.startAnimation(button_as);
+                GlobalState.getButtonSound().start();
+                GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
+                GlobalState.setAbbasta(false);
 
-                    v.startAnimation(button_as);
-                    GlobalState.getButtonSound().start();
-                    GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
-                    GlobalState.setAbbasta(false);
-                }
             }
         });
 
@@ -419,6 +522,7 @@ public class Game extends Activity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 GlobalState.getTypewriter_drin().start();
+
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -442,6 +546,9 @@ public class Game extends Activity {
         custom_toast.makeText(Game.this,text,duration);
         custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
         custom_toast.show();
+    }
+    private void refreshFriends(Context context){
+        new GetAllFriends((ListView) findViewById(R.id.lista_amici),context).execute(GlobalState.getDb());
     }
 }
 

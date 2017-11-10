@@ -1,6 +1,7 @@
 package elbadev.com.wordswords;
 
 import android.app.PendingIntent;
+import android.arch.persistence.room.Room;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -182,7 +183,6 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         final ServiceConnection mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
@@ -196,11 +196,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                 mService = IInAppBillingService.Stub.asInterface(service);
             }
         };
-        Intent serviceIntent =
-                new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        final boolean blnBind = bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-        System.out.println("WORDSWORDS_LOG: Servizio bindato." + String.valueOf(blnBind));
+
 
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -226,7 +222,6 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         button_as.addAnimation(button_translate);
         button_as.addAnimation(button_scale);
         //esistenza();
-
 
 
 
@@ -368,7 +363,14 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
             });
         }
-
+        //setto il db
+        GlobalState.setDb(Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "archivio").build());
+        //Setto username e password se le avevo salvate nel DB
+        TextView email_1 = (TextView) findViewById(R.id.email);
+        TextView password_1 = (TextView) findViewById(R.id.password);
+        //prendo l'ultimo user inserito
+        new GetUser(email_1,password_1).execute(GlobalState.getDb());
+        //----------------------------------------------------
         Button button_compra_fogli = (Button) findViewById(R.id.button_compra_fogli);
         button_compra_fogli.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -614,10 +616,11 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                     e.printStackTrace();
                 }
                 //RISCHIOSO
-                if (mService != null) {
-                    unbindService(mServiceConn);
-                }
+//                if (mService != null) {
+//                    unbindService(mServiceConn);
+//                }
                 //FINE RISCHIOSO
+
                 JSONObject pino = postParam;
                 System.out.println("WORDSWORDS_LOG: JSON OUTPUT->" + pino.toString());
 
@@ -640,6 +643,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                                         GlobalState.setDesktop(i);
                                         i.putExtra("token", response.getString("token"));
                                         startActivity(i);
+                                        // salvo le credenziali nel DB
+                                        new InsertUser(GlobalState.getMia_email(),GlobalState.getMia_password()).execute(GlobalState.getDb());
                                     } else {
                                         customToast("Questo utente non esiste, puoi registrarti cliccando su REGISTRATI",Toast.LENGTH_LONG);
 //                                        Toast.makeText(WordsWords.this, " Utente non esistente ", Toast.LENGTH_SHORT).show();
@@ -653,7 +658,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        customToast("Sei hai premuto REGISTRATI, allora non hai inserito le credanziali! Altrimenti L'utente non esiste o il server non risponde.",Toast.LENGTH_LONG);
+                        customToast("Prima inserisci Username e Password! Se le hai inserite o l'utente non esiste o il server non risponde.",Toast.LENGTH_LONG);
 //                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
                         System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
 
@@ -682,12 +687,22 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 GlobalState.getTypewriter_drin().start();
+                if (mService != null) {
+                    unbindService(mServiceConn);
+                }
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
+
+                Intent serviceIntent =
+                        new Intent("com.android.vending.billing.InAppBillingService.BIND");
+                serviceIntent.setPackage("com.android.vending");
+                final boolean blnBind = bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+                System.out.println("WORDSWORDS_LOG: Servizio bindato." + String.valueOf(blnBind));
                 super.onDrawerOpened(drawerView);
                 GlobalState.getTypewriter_paper_3().start();
+
             }
         };
 

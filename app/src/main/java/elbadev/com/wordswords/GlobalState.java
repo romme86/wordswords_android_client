@@ -1,6 +1,7 @@
 package elbadev.com.wordswords;
 
 import android.app.Application;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.text.Layout;
@@ -56,6 +57,8 @@ public class GlobalState extends Application {
     static private String utenti_online[] = null ;
     static private String vincitore;
     static private Integer punti_vincitore;
+    static private AppDatabase db;
+
 
     public static final String getBase64publicKey(){ return  GlobalState.base64EncodePublicKey; }
     public static Socket getmSocket() {
@@ -324,6 +327,14 @@ public class GlobalState extends Application {
 
     public static void setSetup_payment_done(Boolean setup_payment_done) {
         GlobalState.setup_payment_done = setup_payment_done;
+    }
+
+    public static AppDatabase getDb() {
+        return db;
+    }
+
+    public static void setDb(AppDatabase db) {
+        GlobalState.db = db;
     }
 
     @Override
