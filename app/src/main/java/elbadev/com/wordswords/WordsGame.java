@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -425,6 +426,10 @@ public class WordsGame extends Activity {
         }
         tvg.lowBound = 80;
         tvg.upBound = 150;
+        //metto l'inizio frase in global state
+        GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
+        GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
+
         tvg.animateText(g.getStringExtra("prima_parte"));
 
         final Button scelta = (Button) findViewById(R.id.invia_scelta);
@@ -445,11 +450,8 @@ public class WordsGame extends Activity {
 
                 View view = WordsGame.this.getCurrentFocus();
                 if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    System.out.println("WORDSWORDS_LOG: nascondo tastiera 2");
+                    hideKeyboard(view);
                 }
-
             }
         });
 
@@ -559,6 +561,9 @@ public class WordsGame extends Activity {
         final Button scelta = (Button) findViewById(R.id.invia_scelta);
         final TextView wt = (TextView) findViewById(R.id.wait_text);
         final EditText edo = (EditText) findViewById(R.id.testo);
+
+
+
         scelta.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 GlobalState.getmSocket().emit("invio_scelta", edo.getText());
@@ -568,9 +573,11 @@ public class WordsGame extends Activity {
                 wt.setVisibility(View.VISIBLE);
                 edo.setVisibility(View.GONE);
                 System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
+                View view = WordsGame.this.getCurrentFocus();
+                if (view != null) {
+                    hideKeyboard(view);
+                }
 
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
 
@@ -587,6 +594,10 @@ public class WordsGame extends Activity {
         custom_toast.makeText(WordsGame.this,text,duration);
         custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
         custom_toast.show();
+    }
+    private void hideKeyboard(View view){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_HIDDEN);
     }
 
 }

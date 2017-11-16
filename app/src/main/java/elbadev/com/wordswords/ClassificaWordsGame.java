@@ -1,6 +1,7 @@
 package elbadev.com.wordswords;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -10,12 +11,14 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -160,96 +163,95 @@ public class ClassificaWordsGame extends Activity {
         pb.setVisibility(View.GONE);
 
         try {
-            Iterator<String> temp = GlobalState.getClassifica().keys();
+            if(GlobalState.getClassifica() != null){
+                Iterator<String> temp = GlobalState.getClassifica().keys();
+                System.out.println("WORDSWORDS_LOG: count: ");
+
+                while (temp.hasNext()) {
+                    System.out.println("WORDSWORDS_LOG: start cycle");
+                    String key = temp.next();
+                    Object profilo = GlobalState.getClassifica().get(key);
+                    JSONObject pro = (JSONObject) profilo;
+
+                    Display display = getWindowManager().getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    int width = size.x;
+                    int height = size.y;
+
+                    int larg = (60 * width) / 100;
+
+                    if (GlobalState.getMia_email().equals(pro.getString("nome"))) {
+                        GlobalState.setMiei_punti(pro.getInt("points"));
+                    }
 
 
+                    TableLayout tabella = (TableLayout) findViewById(R.id.tab);
 
-            while (temp.hasNext()) {
+                    TableRow riga = new TableRow(this);
+    //                LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //                riga = (TableRow)inflater.inflate(R.layout.custom_list_row, null);
+                    TableRow.LayoutParams aParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                    riga.setLayoutParams(aParams);
+                    riga.setGravity(Gravity.CENTER);
+
+                    TextView nome = new TextView(this);
+                    nome.setBackgroundColor(Color.parseColor("#ebca79"));
+                    nome.setText(pro.getString("nome"));
+                    nome.setGravity(Gravity.CENTER);
+                    nome.setPadding(2, 10, 2, 10);
+                    riga.addView(nome);
+
+                    TextView punti = new TextView(this);
+                    punti.setBackgroundColor(Color.parseColor("#ebca79"));
+                    punti.setText(pro.getString("points"));
+                    punti.setGravity(Gravity.CENTER);
+                    punti.setPadding(2, 10, 2, 10);
+                    riga.addView(punti);
+
+                    TextView voto = new TextView(this);
+                    voto.setWidth(larg);
+                    voto.setBackgroundColor(Color.parseColor("#ebca79"));
+                    voto.setLines(1);
+                    voto.setPadding(2, 10, 2, 10);
+                    voto.setHorizontallyScrolling(true);
+                    voto.setMovementMethod(new ScrollingMovementMethod());
+                    voto.setText(pro.getString("voto").replace("[", "").replace("]", "").replace("\"", ""));
+                    System.out.println("WORDSWORDS_LOG: .......... " + pro.getString("voto"));
+                    riga.addView(voto);
 
 
+                    tabella.addView(riga, new TableLayout.LayoutParams());
 
 
-                String key = temp.next();
-                Object profilo = GlobalState.getClassifica().get(key);
-                JSONObject pro = (JSONObject) profilo;
+                    TableRow riga2 = new TableRow(this);
 
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-                int height = size.y;
+                    TableRow.LayoutParams aParams2 = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                    aParams2.span = 3;
+                    riga2.setLayoutParams(aParams2);
+                    riga2.setGravity(Gravity.CENTER);
 
-                int larg = (60*width)/100;
 
-                if(GlobalState.getMia_email().equals(pro.getString("nome")))
-                {
-                    GlobalState.setMiei_punti(pro.getInt("points"));
+                    TextView frase = new TextView(this);
+                    frase.setText(pro.getString("frase"));
+                    frase.setGravity(Gravity.CENTER);
+                    frase.setTextColor(Color.BLACK);
+                    riga2.addView(frase);
+
+                    tabella.addView(riga2, new TableLayout.LayoutParams());
+
+                    TableRow riga_vuota = new TableRow(this);
+                    TextView frase_vuota = new TextView(this);
+                    frase_vuota.setText("");
+                    frase_vuota.setGravity(Gravity.CENTER);
+
+                    riga_vuota.addView(frase_vuota);
+
+                    tabella.addView(riga_vuota, new TableLayout.LayoutParams());
+
+
+                    System.out.println("WORDSWORDS_LOG: ........ fine ciclo");
                 }
-
-
-                TableLayout tabella = (TableLayout) findViewById(R.id.tab);
-
-
-                TableRow riga = new TableRow(this);
-
-                TableRow.LayoutParams aParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                riga.setLayoutParams(aParams);
-                riga.setGravity(Gravity.CENTER);
-
-                TextView nome = new TextView(this);
-                nome.setText(pro.getString("nome"));
-                nome.setGravity(Gravity.CENTER);
-                nome.setPadding(2,10,2,10);
-                riga.addView(nome);
-
-                TextView punti = new TextView(this);
-                punti.setText(pro.getString("points"));
-                punti.setGravity(Gravity.CENTER);
-                punti.setPadding(2,10,2,10);
-                riga.addView(punti);
-
-                TextView voto = new TextView(this);
-                voto.setWidth(larg);
-                voto.setLines(1);
-                voto.setPadding(2,10,2,10);
-                voto.setHorizontallyScrolling(true);
-                voto.setMovementMethod(new ScrollingMovementMethod());
-                voto.setText(pro.getString("voto").replace("[","").replace("]","").replace("\"",""));
-                System.out.println("WORDSWORDS_LOG: .......... " + pro.getString("voto"));
-                riga.addView(voto);
-
-
-                tabella.addView(riga, new TableLayout.LayoutParams());
-
-
-                TableRow riga2 = new TableRow(this);
-
-                TableRow.LayoutParams aParams2 = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                aParams2.span = 3;
-                riga2.setLayoutParams(aParams2);
-                riga2.setGravity(Gravity.CENTER);
-
-
-
-                TextView frase = new TextView(this);
-                frase.setText(pro.getString("frase"));
-                frase.setGravity(Gravity.CENTER);
-                frase.setTextColor(Color.BLACK);
-                riga2.addView(frase);
-
-                tabella.addView(riga2, new TableLayout.LayoutParams());
-
-                TableRow riga_vuota = new TableRow(this);
-                TextView frase_vuota = new TextView(this);
-                frase_vuota.setText("");
-                frase_vuota.setGravity(Gravity.CENTER);
-
-                riga_vuota.addView(frase_vuota);
-
-                tabella.addView(riga_vuota, new TableLayout.LayoutParams());
-
-
-               System.out.println("WORDSWORDS_LOG: ........ fine ciclo");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -257,7 +259,6 @@ public class ClassificaWordsGame extends Activity {
 
 
         //GESTIONE SOCKET
-
         GlobalState.getmSocket().on("1", on_1).on("ultimo_turno", on_ultimo_turno).on("who_win", on_who_win);
 
         //Bottone Avanzamento o Fine
@@ -310,12 +311,36 @@ public class ClassificaWordsGame extends Activity {
 
         try {
             Iterator<String> temp = GlobalState.getClassifica().keys();
+            TableLayout tabella = (TableLayout) findViewById(R.id.tab);
+            //aggiungo frase giusta
+            TableRow riga_giusta = new TableRow(this);
+            TableRow.LayoutParams aParams_g = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            aParams_g.span = 2;
+            riga_giusta.setLayoutParams(aParams_g);
+            riga_giusta.setPadding(5,5,5,5);
+            riga_giusta.setBackgroundColor(Color.parseColor("#000000"));
+            riga_giusta.setGravity(Gravity.LEFT);
+            TextView frase_giusta = new TextView(this);
+            frase_giusta.setText(GlobalState.getFrase_giusta_inizio().replace("...","") + " " + GlobalState.getFrase_giusta_fine().replace("...",""));
+            frase_giusta.setBackgroundColor(Color.parseColor("#ebca79"));
+            frase_giusta.setGravity(Gravity.CENTER);
+            frase_giusta.setTextColor(Color.BLACK);
+            frase_giusta.setLayoutParams(aParams_g);
+            frase_giusta.setPadding(2,10,2,10);
+            riga_giusta.addView(frase_giusta);
 
-
-
+            TableRow riga_vuota = new TableRow(this);
+            riga_vuota.setLayoutParams(aParams_g);
+            riga_vuota.setGravity(Gravity.LEFT);
+            riga_vuota.setPadding(5,5,5,5);
+            TextView vuota = new TextView(this);
+            vuota.setText(" ");
+            vuota.setGravity(Gravity.CENTER);
+            vuota.setPadding(2,10,2,10);
+            riga_vuota.addView(vuota);
+            tabella.addView(riga_giusta, new TableLayout.LayoutParams());
+            tabella.addView(riga_vuota, new TableLayout.LayoutParams());
             while (temp.hasNext()) {
-
-
 
                 String key = temp.next();
                 Object profilo = GlobalState.getClassifica().get(key);
@@ -329,70 +354,115 @@ public class ClassificaWordsGame extends Activity {
 
                 int larg = (60*width)/100;
 
-                TableLayout tabella = (TableLayout) findViewById(R.id.tab);
 
 
-                TableRow riga = new TableRow(this);
 
+                TableRow riga_nome = new TableRow(this);
                 TableRow.LayoutParams aParams = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                riga.setLayoutParams(aParams);
-                riga.setGravity(Gravity.CENTER);
+                riga_nome.setLayoutParams(aParams);
+                riga_nome.setPadding(5,5,5,0);
+                riga_nome.setBackgroundColor(Color.parseColor("#000000"));
+                riga_nome.setGravity(Gravity.LEFT);
 
+                TextView nome_label = new TextView(this);
+                nome_label.setBackgroundColor(Color.parseColor("#ebca79"));
+                nome_label.setText("Scrittore:");
+                nome_label.setLayoutParams(aParams);
+                nome_label.setGravity(Gravity.LEFT);
+                nome_label.setPadding(2,10,2,10);
+                riga_nome.addView(nome_label);
                 TextView nome = new TextView(this);
+                nome.setBackgroundColor(Color.parseColor("#ebca79"));
                 nome.setText(pro.getString("nome"));
-                nome.setGravity(Gravity.CENTER);
+                nome.setLayoutParams(aParams);
+                nome.setGravity(Gravity.RIGHT);
                 nome.setPadding(2,10,2,10);
-                riga.addView(nome);
+                riga_nome.addView(nome);
 
+                TableRow riga_Punti = new TableRow(this);
+                riga_Punti.setLayoutParams(aParams);
+                riga_Punti.setPadding(5,5,5,0);
+                riga_Punti.setBackgroundColor(Color.parseColor("#000000"));
+                riga_Punti.setGravity(Gravity.LEFT);
+
+                TextView punti_label = new TextView(this);
+                punti_label.setBackgroundColor(Color.parseColor("#ebca79"));
+                punti_label.setText("Punti:");
+                punti_label.setLayoutParams(aParams);
+                punti_label.setGravity(Gravity.LEFT);
+                punti_label.setPadding(2,10,2,10);
+                riga_Punti.addView(punti_label);
                 TextView punti = new TextView(this);
+                punti.setBackgroundColor(Color.parseColor("#ebca79"));
                 punti.setText(pro.getString("points"));
-                punti.setGravity(Gravity.CENTER);
+                punti.setLayoutParams(aParams);
+                punti.setGravity(Gravity.RIGHT);
                 punti.setPadding(2,10,2,10);
-                riga.addView(punti);
+                riga_Punti.addView(punti);
 
+                TableRow riga_voto = new TableRow(this);
+                riga_voto.setLayoutParams(aParams);
+                riga_voto.setPadding(5,5,5,0);
+                riga_voto.setBackgroundColor(Color.parseColor("#000000"));
+                riga_voto.setGravity(Gravity.LEFT);
+
+                TextView voto_label = new TextView(this);
+                voto_label.setBackgroundColor(Color.parseColor("#ebca79"));
+                voto_label.setText("Votato da:");
+                voto_label.setLayoutParams(aParams);
+                voto_label.setGravity(Gravity.LEFT);
+                voto_label.setPadding(2,10,2,10);
+                riga_voto.addView(voto_label);
                 TextView voto = new TextView(this);
                 voto.setWidth(larg);
-                voto.setLines(1);
+                voto.setBackgroundColor(Color.parseColor("#ebca79"));
+//                voto.setLines(1);
                 voto.setPadding(2,10,2,10);
                 voto.setHorizontallyScrolling(true);
+                voto.setLayoutParams(aParams);
                 voto.setMovementMethod(new ScrollingMovementMethod());
                 voto.setText(pro.getString("voto").replace("[","").replace("]","").replace("\"",""));
                 System.out.println("WORDSWORDS_LOG: .......... " + pro.getString("voto"));
-                riga.addView(voto);
+                riga_voto.addView(voto);
 
-
-                tabella.addView(riga, new TableLayout.LayoutParams());
-
-                TableRow riga2 = new TableRow(this);
                 TableRow.LayoutParams aParams2 = new TableRow.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                aParams2.span = 3;
-                riga2.setLayoutParams(aParams2);
-                riga2.setGravity(Gravity.CENTER);
-
+                aParams2.span = 2;
+                TableRow riga_frase = new TableRow(this);
+                riga_frase.setLayoutParams(aParams2);
+                riga_frase.setGravity(Gravity.LEFT);
+                riga_frase.setPadding(5,5,5,5);
+                riga_frase.setBackgroundColor(Color.parseColor("#000000"));
 
                 TextView frase = new TextView(this);
                 frase.setText(pro.getString("frase"));
+                frase.setBackgroundColor(Color.parseColor("#ebca79"));
                 frase.setGravity(Gravity.CENTER);
                 frase.setTextColor(Color.BLACK);
-                frase.setGravity(Gravity.CENTER);
+                frase.setLayoutParams(aParams2);
+                frase.setPadding(2,10,2,10);
+                riga_frase.addView(frase);
 
-                riga2.addView(frase);
+                TableRow riga_vuota_s = new TableRow(this);
+                riga_vuota_s.setLayoutParams(aParams_g);
+                riga_vuota_s.setGravity(Gravity.LEFT);
+                riga_vuota_s.setPadding(5,5,5,5);
+                TextView vuota_s = new TextView(this);
+                vuota_s.setText(" ");
+                vuota_s.setGravity(Gravity.CENTER);
+                vuota_s.setPadding(2,10,2,10);
+                riga_vuota_s.addView(vuota_s);
 
-                tabella.addView(riga2, new TableLayout.LayoutParams());
+                tabella.addView(riga_nome, new TableLayout.LayoutParams());
+                tabella.addView(riga_Punti, new TableLayout.LayoutParams());
+                tabella.addView(riga_voto, new TableLayout.LayoutParams());
+                tabella.addView(riga_frase, new TableLayout.LayoutParams());
+                tabella.addView(riga_vuota_s, new TableLayout.LayoutParams());
 
-
-                TableRow riga_vuota = new TableRow(this);
-                TextView frase_vuota = new TextView(this);
-                frase_vuota.setText("");
-                frase_vuota.setGravity(Gravity.CENTER);
-
-                riga_vuota.addView(frase_vuota);
-
-                tabella.addView(riga_vuota, new TableLayout.LayoutParams());
 
 
                 System.out.println("WORDSWORDS_LOG: ........ fine ciclo");
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -448,6 +518,8 @@ public class ClassificaWordsGame extends Activity {
         custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
         custom_toast.show();
     }
+
+
 
 }
 

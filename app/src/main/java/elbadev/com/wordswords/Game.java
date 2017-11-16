@@ -43,11 +43,10 @@ import java.util.List;
  */
 
 
-public class Game extends Activity {
+public class Game extends Activity{
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private AutoCompleteTextView invitables;
-
 
     private String[] names = {
         "gionni"
@@ -62,7 +61,22 @@ public class Game extends Activity {
     private Handler handler_toast = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText(Game.this, message.obj.toString(), Toast.LENGTH_SHORT).show();
+            if (Looper.getMainLooper() == null)
+            {
+                Looper.prepare();
+            }
+            String messaggio = message.getData().getString("messaggio");
+            LayoutInflater li = getLayoutInflater();
+            View view = li.inflate(R.layout.toast_layout,null);
+            TextView tv = (TextView) view.findViewById(R.id.custom_text);
+            tv.setText(messaggio);
+            Toast custom_toast = new Toast(Game.this);
+            custom_toast.setView(view);
+            custom_toast.makeText(Game.this,messaggio,Toast.LENGTH_LONG);
+            custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
+            custom_toast.show();
+
+//            Toast.makeText(Game.this, message.obj.toString(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -71,7 +85,6 @@ public class Game extends Activity {
     private Handler handler_users = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-
 
             final Bundle bobbo = message.getData();
             System.out.println("WORDSWORDS_LOG: Lista Utenti Management " +  bobbo.getString("lista"));
@@ -95,8 +108,6 @@ public class Game extends Activity {
                 }
         }
     };
-
-
 
     //<<<<<<<<<   INIZIO LISTA EMETTITORI    >>>>>>>>>
 
@@ -132,29 +143,32 @@ public class Game extends Activity {
     private Emitter.Listener on_cerca_amico = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            System.out.println("WORDSWORDS_LOG: Utente Entrato");
-            customToast("un utente é entrato nella stanza!",Toast.LENGTH_LONG);
+            System.out.println("WORDSWORDS_LOG: on_cerca_amico");
+
         }
     };
-
 
     //Ricezione Notifica Avvenuto contatto con amico
     private Emitter.Listener on_amico_trovato = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            customToast("un amico é entrato nella stanza!",Toast.LENGTH_LONG);
-
-
+            System.out.println("WORDSWORDS_LOG: on_amico_trovato");
+        }
+    };
+    //entra_giocatore
+    private Emitter.Listener on_entra_giocatore = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            String nome_giocatore_entrato = (String)args[0];
+            System.out.println("WORDSWORDS_LOG: Giocatore entrato: " + nome_giocatore_entrato);
+            Bundle bundle = new Bundle();
+            bundle.putString("messaggio" , nome_giocatore_entrato + " é entrato nella stanza!");
+            Message message = handler_toast.obtainMessage();
+            message.setData(bundle);
+            message.sendToTarget();
         }
     };
 
-
-
-        public void toast( String message)
-        {
-            Toast.makeText(this, "My Toast message", Toast.LENGTH_SHORT)
-                    .show();
-        }
 
     //Server spedisce tutti in partita
     private Emitter.Listener on_trasferimento_partita = new Emitter.Listener() {
@@ -207,11 +221,10 @@ public class Game extends Activity {
 
             try
             {
-                
+
                 System.out.println("WORDSWORDS_LOG: Ricezione dal Server della lista utenti in partita " + obj.getString("utenti"));
                 Bundle bibbo = new Bundle();
                 bibbo.putString("lista" , obj.getString("utenti"));
-
                 Message message = handler_users.obtainMessage();
                 message.setData(bibbo);
                 message.sendToTarget();
@@ -267,6 +280,34 @@ public class Game extends Activity {
 
         // Get ListView object from xml
         lv = (ListView) findViewById(R.id.lobby);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adattatore, final View componente, int pos, long id){
+                // qui dentro stabilisco cosa fare dopo il click
+                // chiedere se aggiungere agli amici
+                final String scrittore = (String)adattatore.getItemAtPosition(pos);
+                if(!scrittore.equals(GlobalState.getMia_email())){
+                    AlertDialog alert = new AlertDialog.Builder(Game.this).create();
+                    alert.setTitle("Invito di Gioco");
+                    alert.setMessage("Puoi aggiungere " +  scrittore + " alla tua lista amici");
+                    alert.setButton(Dialog.BUTTON_NEGATIVE,"Aggiungi",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
+                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+                            //in qualche modo la lista amici deve essere aggiornata dopo questo
+                            customToast(scrittore + " sará presente nella lista amici al prossimo riavvio",Toast.LENGTH_LONG);
+
+                        }
+                    });
+
+                    alert.show();
+                }else{
+                    customToast("non puoi aggiungerti o invitarti!",Toast.LENGTH_LONG);
+                }
+            }
+        });
+
 
 //        GlobalState.getTypewriter_multi_sound().start();
         final Animation button_translate = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
@@ -288,8 +329,8 @@ public class Game extends Activity {
                 (this, android.R.layout.simple_list_item_1, fruits_list);
 
         //recupero gli amici dal db:
-        ArrayAdapter adapter_friends = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
-        ListView lva;
+        final ArrayAdapter adapter_friends = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
+        final ListView lva;
         lva = (ListView) findViewById(R.id.lista_amici);
         lva.setAdapter(adapter_friends);
 
@@ -305,7 +346,8 @@ public class Game extends Activity {
 
         //GESTIONE SOCKET
 
-        GlobalState.getmSocket().on("cerca_partita", on_cerca_partita).on("partita_distrutta", on_partita_distrutta).on("utente_entrato", on_cerca_amico).on("invito_inviato", on_amico_trovato).on("lista_utenti", on_lista_utenti).on("trasferimento_partita", on_trasferimento_partita).on("abbastanza", on_abbastanza);
+
+        GlobalState.getmSocket().on("cerca_partita", on_cerca_partita).on("partita_distrutta", on_partita_distrutta).on("utente_entrato", on_cerca_amico).on("invito_inviato", on_amico_trovato).on("lista_utenti", on_lista_utenti).on("trasferimento_partita", on_trasferimento_partita).on("abbastanza", on_abbastanza).on("entra_giocatore",on_entra_giocatore);
         Button btn_chiudi = (Button) findViewById(R.id.button_chiudi);
         btn_chiudi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -358,6 +400,7 @@ public class Game extends Activity {
                             System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
                             new InsertFriend(scrittore).execute(GlobalState.getDb());
                             //in qualche modo la lista amici deve essere aggiornata dopo questo
+                            customToast(scrittore + " sará presente nella lista amici al prossimo riavvio",Toast.LENGTH_LONG);
 
                         }
                     });
@@ -383,18 +426,10 @@ public class Game extends Activity {
                 // qui dentro stabilisco cosa fare dopo il click
                 // chiedere se invitare o aggiungere agli amici
                 final String scrittore = (String)adattatore.getItemAtPosition(pos);
-//                if(!scrittore.equals(GlobalState.getMia_email())){
+                if(!scrittore.equals(GlobalState.getMia_email())){
                     AlertDialog alert = new AlertDialog.Builder(Game.this).create();
                     alert.setTitle("Invito di Gioco");
                     alert.setMessage("Vuoi invitare " + scrittore+ " in partita?");
-//                    alert.setButton(Dialog.BUTTON_NEGATIVE,"Aggiungi",new DialogInterface.OnClickListener(){
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
-//                            new InsertFriend(scrittore).execute(GlobalState.getDb());
-//                            //in qualche modo la lista amici deve essere aggiornata dopo questo
-//                        }
-//                    });
                     alert.setButton(Dialog.BUTTON_POSITIVE,"Invita",new DialogInterface.OnClickListener(){
 
                         @Override
@@ -404,9 +439,9 @@ public class Game extends Activity {
                         }
                     });
                     alert.show();
-//                }else{
-//                    customToast("non puoi aggiungerti o invitarti!",Toast.LENGTH_LONG);
-//                }
+                }else{
+                    customToast("non puoi aggiungerti o invitarti!",Toast.LENGTH_LONG);
+                }
             }
         });
 
@@ -538,7 +573,6 @@ public class Game extends Activity {
     public void customToast(String text, int duration){
         LayoutInflater li = getLayoutInflater();
         View view = li.inflate(R.layout.toast_layout,null);
-
         TextView tv = (TextView) view.findViewById(R.id.custom_text);
         tv.setText(text);
         Toast custom_toast = new Toast(this);

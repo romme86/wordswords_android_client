@@ -6,4 +6,6 @@
     <color name="giallino">#ebca79</color>
     <color name="giallino_titoli">#000000</color>
     <color name="giallino_bottone">#e0ad50</color>
+    <color name="giallino_scuro">#86672f</color>
+    <color name="nerino">#151411</color>
 </resources>

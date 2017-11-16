@@ -17,11 +17,17 @@ public class InsertFriend extends AsyncTask<AppDatabase,Void,Bundle> {
     protected Bundle doInBackground(AppDatabase... dbs) {
         int count = dbs.length;
         System.out.println("WORDSWORDS_LOG: count: " + count);
+
         for (int i=0; i<count;i++){
             Friend friend = new Friend(friendName);
-            dbs[i].friendDao().insertAll(friend);
-            for (int d = 0; d<dbs[i].friendDao().getAll().size(); d++ ) {
-                System.out.println("WORDSWORDS_LOG: in db: " + dbs[i].friendDao().getAll().get(d).nome);
+            String nome = dbs[i].friendDao().findByName(friendName);
+            if(nome == null) {
+                dbs[i].friendDao().insertAll(friend);
+                for (int d = 0; d < dbs[i].friendDao().getAll().size(); d++) {
+                    System.out.println("WORDSWORDS_LOG: in db: " + dbs[i].friendDao().getAll().get(d).nome);
+                }
+            }else{
+                System.out.println("WORDSWORDS_LOG: utente giá inserito negli amici ");
             }
         }
 

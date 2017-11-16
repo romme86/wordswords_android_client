@@ -15,6 +15,9 @@ public interface FriendDao {
     @Query("SELECT * FROM friend")
     List<Friend> getAll();
 
+    @Query("SELECT nome FROM friend WHERE nome LIKE :name")
+    String findByName(String name);
+
     @Insert
     void insertAll(Friend friends);
 

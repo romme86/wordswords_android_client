@@ -17,7 +17,7 @@ public class GetAllFriends extends AsyncTask<AppDatabase,Void,Bundle> {
     public Context ct = null;
 
     public GetAllFriends(ListView friendsList, Context ct) {
-        this.friendsList = friendsList;;
+        this.friendsList = friendsList;
         this.ct = ct;
     }
 

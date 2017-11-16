@@ -27,6 +27,8 @@ public class GlobalState extends Application {
 //   private static final String base64EncodePublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApCM/a4Nn5xBE3fFeSrOv3QqiA7IoCfy08x9BRP7PrmP9PgDihCLAPjR+5BeUy7cIl4kIayUVAd0qZcccDdgSMkgkx5jBexGDyrDpUkaybGVvWIDZ3SKidp9JxFwDE5zyFn52NNy3Sp/+k/walE2c+3YV5QA8p1OF/2qV71cYuCploU5vX1LXYmu6NEG77lccZ2gQKC3VwrBUCKuZnoSUBdfqtn1gzhJmb7h1f1LKdNwz7vwJtux5N0IRouPHkFwuX7CRbmZBhocRbLR5kge5NUhibY4FBNCFUUSN967qmo+v69fZcrY6cSpAIdtuOJKHDcULZCJMf/62ARwiN/sFHQIDAQAB";
     private static final String base64EncodePublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApCM/a4Nn5xBE3fFeSrOv3QqiA7IoCfy08x9BRP7PrmP9PgDihCLAPjR+5BeUy7cIl4kIayUVAd0qZcccDdgSMkgkx5jBexGDyrDpUkaybGVvWIDZ3SKidp9JxFwDE5zyFn52NNy3Sp/+k/walE2c+3YV5QA8p1OF/2qV71cYuCploU5vX1LXYmu6NEG77lccZ2gQKC3VwrBUCKuZnoSUBdfqtn1gzhJmb7h1f1LKdNwz7vwJtux5N0IRouPHkFwuX7CRbmZBhocRbLR5kge5NUhibY4FBNCFUUSN967qmo+v69fZcrY6cSpAIdtuOJKHDcULZCJMf/62ARwiN/sFHQIDAQAB";
     static private Integer richiesteVolleyInCorso = 0;
+    static private String frase_giusta_inizio = "";
+    static private String frase_giusta_fine = "";
     static private MediaPlayer typewriter_button_sound_0;
     static private MediaPlayer typewriter_button_sound_1;
     static private MediaPlayer typewriter_button_sound_2;
@@ -335,6 +337,22 @@ public class GlobalState extends Application {
 
     public static void setDb(AppDatabase db) {
         GlobalState.db = db;
+    }
+
+    public static String getFrase_giusta_inizio() {
+        return frase_giusta_inizio;
+    }
+
+    public static void setFrase_giusta_inizio(String frase_giusta_inizio) {
+        GlobalState.frase_giusta_inizio = frase_giusta_inizio;
+    }
+
+    public static String getFrase_giusta_fine() {
+        return frase_giusta_fine;
+    }
+
+    public static void setFrase_giusta_fine(String frase_giusta_fine) {
+        GlobalState.frase_giusta_fine = frase_giusta_fine;
     }
 
     @Override

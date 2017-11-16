@@ -1,5 +1,7 @@
 package elbadev.com.wordswords;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
 import android.content.ComponentName;
@@ -19,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +61,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import elbadev.com.wordswords.util.IabBroadcastReceiver;
 import elbadev.com.wordswords.util.IabHelper;
@@ -176,7 +180,15 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 //
 //        mRequestQueue.add(jsonObjReq);
 
-
+    private Handler credentialHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message message) {
+            TextView email_1 = (TextView) findViewById(R.id.email);
+            TextView password_1 = (TextView) findViewById(R.id.password);
+            email_1.setText(message.getData().getString("username"));
+            password_1.setText(message.getData().getString("password"));
+        }
+    };
 
 
     @Override
@@ -222,6 +234,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         button_as.addAnimation(button_translate);
         button_as.addAnimation(button_scale);
         //esistenza();
+
 
 
 
@@ -369,7 +382,8 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         TextView email_1 = (TextView) findViewById(R.id.email);
         TextView password_1 = (TextView) findViewById(R.id.password);
         //prendo l'ultimo user inserito
-        new GetUser(email_1,password_1).execute(GlobalState.getDb());
+        new GetUser(credentialHandler).execute(GlobalState.getDb());
+
         //----------------------------------------------------
         Button button_compra_fogli = (Button) findViewById(R.id.button_compra_fogli);
         button_compra_fogli.setOnClickListener(new View.OnClickListener() {
@@ -541,24 +555,37 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
                             @Override
                             public void onResponse(JSONObject response) {
-                                try {
-                                    if (response.length() != 0) {
-                                        if (response.getInt("utente_registrato") == 1) {
-                                            customToast("Ti sei registrato/a! Accedi per iniziare a giocare!",Toast.LENGTH_LONG);
-//                                            Toast.makeText(WordsWords.this, , Toast.LENGTH_SHORT).show();
-                                            Button rec = (Button) findViewById(R.id.button_registra);
-                                            rec.setVisibility(View.GONE);
-                                        } else {
-                                            customToast("Questo utente non é registrato",Toast.LENGTH_LONG);
-//                                            Toast.makeText(WordsWords.this, " Utente non registrato ", Toast.LENGTH_SHORT).show();
-                                            System.out.println("WORDSWORDS_LOG: Azz " + response);
-                                        }
-                                    } else {
-                                        customToast("Devi inserire uno username! (e poi anche la password)",Toast.LENGTH_LONG);
-//                                        Toast.makeText(WordsWords.this, "Nessun username immesso", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (JSONException e) {
+                                System.out.println("WORDSWORDS_LOG: registrato 0 " + response);
+                                int errore = 0;
+                                try{
+                                    errore =response.getInt("errore");
+                                }catch (JSONException e){
                                     e.printStackTrace();
+                                }
+                                if(errore == 0) {
+                                    try {
+                                        if (response.length() != 0) {
+                                            if (response.getInt("utente_registrato") == 1) {
+                                                customToast("Ti sei registrato/a! Accedi per iniziare a giocare!", Toast.LENGTH_LONG);
+//                                            Toast.makeText(WordsWords.this, , Toast.LENGTH_SHORT).show();
+                                                Button rec = (Button) findViewById(R.id.button_registra);
+                                                rec.setVisibility(View.GONE);
+                                                System.out.println("WORDSWORDS_LOG: registrato1 " + response);
+                                            } else {
+                                                customToast("Questo utente non é registrato", Toast.LENGTH_LONG);
+//                                            Toast.makeText(WordsWords.this, " Utente non registrato ", Toast.LENGTH_SHORT).show();
+                                                System.out.println("WORDSWORDS_LOG: registrato 2 " + response);
+                                            }
+                                        } else {
+                                            System.out.println("WORDSWORDS_LOG: registrato 3 " + response);
+                                            customToast("Devi inserire uno username! (e poi anche la password)", Toast.LENGTH_LONG);
+//                                        Toast.makeText(WordsWords.this, "Nessun username immesso", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else {
+                                    customToast("Questo utente potrebbe essere giá registrato.", Toast.LENGTH_LONG);
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -568,6 +595,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
                         customToast("Devi inserire Username e Password prima! É anche possibile che il server non risponda.",Toast.LENGTH_LONG);
 //                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
                         System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
+                        System.out.println("WORDSWORDS_LOG: registrato puttane ");
 
                     }
                 }) {
@@ -658,7 +686,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        customToast("Prima inserisci Username e Password! Se le hai inserite o l'utente non esiste o il server non risponde.",Toast.LENGTH_LONG);
+                        customToast("Prima inserisci Username e Password! Se le hai inserite potresti averle sbagliate.",Toast.LENGTH_LONG);
 //                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
                         System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
 

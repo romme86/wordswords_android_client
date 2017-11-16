@@ -432,25 +432,19 @@ public class DashBoard extends Activity {
         button_as.addAnimation(button_translate);
         button_as.addAnimation(button_scale);
 
-        Button btn_chiudi = (Button) findViewById(R.id.button_chiudi);
-        btn_chiudi.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(button_as);
-              //  GlobalState.getButtonSound().start();
+//        Button btn_chiudi = (Button) findViewById(R.id.button_chiudi);
+//        btn_chiudi.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                v.startAnimation(button_as);
+//              //  GlobalState.getButtonSound().start();
+//
+//                finish();
+//                System.exit(0);
+//
+//            }
+//        });
 
-                finish();
-                System.exit(0);
 
-            }
-        });
-
-        Button btn_compra = (Button) findViewById(R.id.button_compra);
-        btn_compra.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                v.startAnimation(button_as);
-          //      GlobalState.getButtonSound().start();
-            }
-        });
         //GESTIONE SOCKET
 
         GlobalState.getmSocket().on("creata_partita", on_creata_partita).on("invito", on_notifica_invito).on(Socket.EVENT_DISCONNECT, on_disconnessione).on("non_ha_accettato", on_non_ha_accettato).on("invito_inviato", on_invito_inviato).on("lista_utenti", on_lista_utenti).on("entra_gioco", on_entra_gioco).on("partita_distrutta", on_partita_distrutta).on("lista_utenti_online", on_lista_utenti_online);

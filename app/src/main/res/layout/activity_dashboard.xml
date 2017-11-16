@@ -257,28 +257,6 @@
         android:choiceMode="singleChoice"
         android:elevation="1dp">
 
-        <Button
-            android:id="@+id/button_chiudi"
-            android:layout_width="150dp"
-            android:layout_height="60dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/bottone"
-            android:text="Chiudi"
-            android:textAlignment="center"
-            android:textColor="@color/giallino" />
-
-        <Button
-            android:id="@+id/button_compra"
-            android:layout_width="150dp"
-            android:layout_height="60dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/bottone"
-            android:text="Compra"
-            android:textAlignment="center"
-            android:textColor="@color/giallino" />
-
         <elbadev.com.wordswords.TypeWriter
             android:id="@+id/title_turn"
             android:layout_width="match_parent"
@@ -314,7 +292,7 @@
                     android:id="@+id/title_giocatori_online"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="220dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center_vertical|center_horizontal|center"
                     android:text="Giocatori Online"
                     android:textColor="@color/giallino_titoli"
