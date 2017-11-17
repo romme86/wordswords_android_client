@@ -3,7 +3,7 @@ package elbadev.com.wordswords;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.arch.persistence.room.Room;
+//import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -294,7 +294,7 @@ public class Game extends Activity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
-                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+//                            new InsertFriend(scrittore).execute(GlobalState.getDb());
                             //in qualche modo la lista amici deve essere aggiornata dopo questo
                             customToast(scrittore + " sará presente nella lista amici al prossimo riavvio",Toast.LENGTH_LONG);
 
@@ -381,7 +381,7 @@ public class Game extends Activity{
         invitables.setThreshold(1);
         invitables.setAdapter(adapter);
 
-        new GetAllFriends((ListView) findViewById(R.id.lista_amici),this).execute(GlobalState.getDb());
+//        new GetAllFriends((ListView) findViewById(R.id.lista_amici),this).execute(GlobalState.getDb());
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -398,7 +398,7 @@ public class Game extends Activity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
-                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+//                            new InsertFriend(scrittore).execute(GlobalState.getDb());
                             //in qualche modo la lista amici deve essere aggiornata dopo questo
                             customToast(scrittore + " sará presente nella lista amici al prossimo riavvio",Toast.LENGTH_LONG);
 
@@ -582,7 +582,7 @@ public class Game extends Activity{
         custom_toast.show();
     }
     private void refreshFriends(Context context){
-        new GetAllFriends((ListView) findViewById(R.id.lista_amici),context).execute(GlobalState.getDb());
+//        new GetAllFriends((ListView) findViewById(R.id.lista_amici),context).execute(GlobalState.getDb());
     }
 }
 

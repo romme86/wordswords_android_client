@@ -597,7 +597,7 @@ public class WordsGame extends Activity {
     }
     private void hideKeyboard(View view){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_HIDDEN);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
