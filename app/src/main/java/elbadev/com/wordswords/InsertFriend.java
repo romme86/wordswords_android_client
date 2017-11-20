@@ -23,6 +23,7 @@ public class InsertFriend extends AsyncTask<AppDatabase,Void,Bundle> {
             String nome = dbs[i].friendDao().findByName(friendName);
             if(nome == null) {
                 dbs[i].friendDao().insertAll(friend);
+                System.out.println("WORDSWORDS_LOG: utente inserito ");
                 for (int d = 0; d < dbs[i].friendDao().getAll().size(); d++) {
                     System.out.println("WORDSWORDS_LOG: in db: " + dbs[i].friendDao().getAll().get(d).nome);
                 }

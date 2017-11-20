@@ -9,7 +9,9 @@
     android:elevation="1dp"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+
+    >
 
 
     <ImageView
@@ -92,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="..."
-                    android:inputType="text|textMultiLine"
+                    android:inputType="textVisiblePassword"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:selectAllOnFocus="false"

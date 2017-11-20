@@ -29,6 +29,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -388,7 +389,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         Button button_compra_fogli = (Button) findViewById(R.id.button_compra_fogli);
         button_compra_fogli.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(button_as);
+//                v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
                 try {
                     int result = mService.isBillingSupported(3, getPackageName(), "inapp");
@@ -492,7 +493,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         Button button_indietro = (Button) findViewById(R.id.button_indietro);
         button_indietro.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(button_as);
+//                v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
                 System.out.println("WORDSWORDS_LOG: cliccato indietro");
                 buy_panel.setVisibility(LinearLayout.GONE);
@@ -503,7 +504,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         ImageView btn_toc = (ImageView) findViewById(R.id.tocca);
         btn_toc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                v.startAnimation(button_as);
+                //v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
 
                 DrawerLayout dl = (DrawerLayout)findViewById(R.id.drawer_layout);

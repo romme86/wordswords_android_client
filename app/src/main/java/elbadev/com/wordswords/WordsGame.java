@@ -573,9 +573,8 @@ public class WordsGame extends Activity {
                 wt.setVisibility(View.VISIBLE);
                 edo.setVisibility(View.GONE);
                 System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
-                View view = WordsGame.this.getCurrentFocus();
-                if (view != null) {
-                    hideKeyboard(view);
+                if (v != null) {
+                    hideKeyboard(v);
                 }
 
             }
@@ -598,6 +597,7 @@ public class WordsGame extends Activity {
     private void hideKeyboard(View view){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        System.out.println("WORDSWORDS_LOG: nascosta tastiera! ");
     }
 
 }

@@ -49,7 +49,7 @@ public class Game extends Activity{
     private AutoCompleteTextView invitables;
 
     private String[] names = {
-        "gionni"
+        ""
     };
     ListView lv;
     List<String> fruits_list = new ArrayList<>();
@@ -294,7 +294,7 @@ public class Game extends Activity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
-//                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+                            new InsertFriend(scrittore).execute(GlobalState.getDb());
                             //in qualche modo la lista amici deve essere aggiornata dopo questo
                             customToast(scrittore + " sará presente nella lista amici al prossimo riavvio",Toast.LENGTH_LONG);
 
@@ -398,7 +398,7 @@ public class Game extends Activity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("WORDSWORDS_LOG: Vuole aggiungere agli amici");
-//                            new InsertFriend(scrittore).execute(GlobalState.getDb());
+                            new InsertFriend(scrittore).execute(GlobalState.getDb());
                             //in qualche modo la lista amici deve essere aggiornata dopo questo
                             customToast(scrittore + " sará presente nella lista amici al prossimo riavvio",Toast.LENGTH_LONG);
 
@@ -582,7 +582,7 @@ public class Game extends Activity{
         custom_toast.show();
     }
     private void refreshFriends(Context context){
-//        new GetAllFriends((ListView) findViewById(R.id.lista_amici),context).execute(GlobalState.getDb());
+        new GetAllFriends((ListView) findViewById(R.id.lista_amici),context).execute(GlobalState.getDb());
     }
 }
 
