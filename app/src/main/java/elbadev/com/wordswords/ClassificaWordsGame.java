@@ -321,7 +321,15 @@ public class ClassificaWordsGame extends Activity {
             riga_giusta.setBackgroundColor(Color.parseColor("#000000"));
             riga_giusta.setGravity(Gravity.LEFT);
             TextView frase_giusta = new TextView(this);
-            frase_giusta.setText(GlobalState.getFrase_giusta_inizio().replace("...","") + " " + GlobalState.getFrase_giusta_fine().replace("...",""));
+            String inizio =GlobalState.getFrase_giusta_inizio();
+            String fine =GlobalState.getFrase_giusta_fine();
+            if(inizio != null){
+                inizio = inizio.replace("...","");
+            }
+            if(fine != null){
+                fine = fine.replace("...","");
+            }
+            frase_giusta.setText(inizio + " " + fine);
             frase_giusta.setBackgroundColor(Color.parseColor("#ebca79"));
             frase_giusta.setGravity(Gravity.CENTER);
             frase_giusta.setTextColor(Color.BLACK);

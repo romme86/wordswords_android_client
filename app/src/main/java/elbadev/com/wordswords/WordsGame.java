@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -194,6 +195,12 @@ public class WordsGame extends Activity {
             i.putExtra("tipo", bobbo.getString("tipo"));
             GlobalState.setTurno_gioco(i);
             System.out.println("WORDSWORDS_LOG: parametri: titolo " + i.getStringExtra("titolo") + "autore " + i.getStringExtra("autore")+ "tipo " + i.getStringExtra("tipo") );
+            GlobalState.setFrase_giusta_inizio(bobbo.getString("prima_parte"));
+            if(bobbo.getString("seconda_parte") != null) {
+                GlobalState.setFrase_giusta_fine(bobbo.getString("seconda_parte"));
+            }else{
+                System.out.println("WORDSWORDS_LOG: seconda parte null 1");
+            }
             i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivityIfNeeded(i, 0);
 
@@ -299,6 +306,11 @@ public class WordsGame extends Activity {
                 bibbo.putString("prima_parte" , obj.getString("prima_parte"));
                 bibbo.putString("autore" , obj.getString("autore"));
                 bibbo.putString("tipo" , obj.getString("tipo"));
+                if(obj.getString("seconda_parte") != null) {
+                    GlobalState.setFrase_giusta_fine(obj.getString("seconda_parte"));
+                }else{
+                    System.out.println("WORDSWORDS_LOG: seconda parte null 2");
+                }
                 Message message = handler_nuovo_turno.obtainMessage();
                 message.setData(bibbo);
                 message.sendToTarget();
@@ -427,9 +439,14 @@ public class WordsGame extends Activity {
         tvg.lowBound = 80;
         tvg.upBound = 150;
         //metto l'inizio frase in global state
-        GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
-        GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
-
+        if(g.getStringExtra("prima_parte") != null) {
+            GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
+        }
+        if(g.getStringExtra("seconda_parte") != null) {
+            GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
+        }else{
+            System.out.println("WORDSWORDS_LOG: seconda parte null 3");
+        }
         tvg.animateText(g.getStringExtra("prima_parte"));
 
         final Button scelta = (Button) findViewById(R.id.invia_scelta);
@@ -529,6 +546,27 @@ public class WordsGame extends Activity {
         final TypeWriter tvg = (TypeWriter) findViewById(R.id.sentenza);
         tvg.setText("");
         String tipo = g.getStringExtra("tipo");
+// timer
+        final Button scelta = (Button) findViewById(R.id.invia_scelta);
+//        final TextView textTimer = (TextView)findViewById(R.id.timer);
+
+//        new CountDownTimer(30000, 1000) {
+//            int time=60;
+//            public void onTick(long millisUntilFinished) {
+//                textTimer.setText("0:"+checkDigit(time));
+//                time--;
+//            }
+//
+//            public void onFinish() {
+//                textTimer.setText("tempo esaurito");
+//                scelta.performClick();
+//
+//            }
+//
+//        }.start();
+
+
+
 
 
 
@@ -556,9 +594,17 @@ public class WordsGame extends Activity {
         tvg.lowBound = 80;
         tvg.upBound = 150;
         tvg.animateText(g.getStringExtra("prima_parte"));
+        System.out.println("WORDSWORDS_LOG: inzio: " + g.getStringExtra("prima_parte") + " -fine: " +  g.getStringExtra("seconda_parte"));
+        if(g.getStringExtra("prima_parte") != null) {
+            GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
+        }
+        if(g.getStringExtra("seconda_parte") != null) {
+            GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
+        }else{
+            System.out.println("WORDSWORDS_LOG: seconda parte null 4");
+        }
 
 
-        final Button scelta = (Button) findViewById(R.id.invia_scelta);
         final TextView wt = (TextView) findViewById(R.id.wait_text);
         final EditText edo = (EditText) findViewById(R.id.testo);
 
@@ -598,6 +644,9 @@ public class WordsGame extends Activity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         System.out.println("WORDSWORDS_LOG: nascosta tastiera! ");
+    }
+    public String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
     }
 
 }

@@ -52,9 +52,10 @@ public class Game extends Activity{
         ""
     };
     ListView lv;
+    ListView lvo;
     List<String> fruits_list = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
-
+    List<String> lista_gamers = new ArrayList<>();
     //HANDLER
 
     //Handler Toast Gnam
@@ -79,7 +80,39 @@ public class Game extends Activity{
 //            Toast.makeText(Game.this, message.obj.toString(), Toast.LENGTH_SHORT).show();
         }
     };
+    private Handler handler_online = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message message) {
 
+
+            final Bundle bobbo = message.getData();
+
+            System.out.println("WORDSWORDS_LOG: Lista Utenti online " +  bobbo.getString("lista"));
+            String zimba = bobbo.getString("lista");
+            lvo.setAdapter(null);
+
+            String[] fruits = new String[]{};
+            System.out.println("WORDSWORDS_LOG: Lista Utenti online due ");
+            lista_gamers = new ArrayList<String>(Arrays.asList(fruits));
+            arrayAdapter = new ArrayAdapter<String>
+                    (Game.this, android.R.layout.simple_list_item_1, lista_gamers);
+            System.out.println("WORDSWORDS_LOG: Lista Utenti online tre ");
+
+            // Assign adapter to ListView
+            lvo.setAdapter(arrayAdapter);
+
+            System.out.println("WORDSWORDS_LOG: Lista Utenti online quattro ");
+            String[] spirit = zimba.split("___");
+
+            GlobalState.setUtenti_online(spirit);
+
+            for(int i = 0; i < spirit.length; i++) {
+                lista_gamers.add(spirit[i]);
+                arrayAdapter.notifyDataSetChanged();
+                System.out.println("WORDSWORDS_LOG: Lista Utenti online cinque " + spirit[i]);
+            }
+        }
+    };
     //Handler Lista Utenti Management
 
     private Handler handler_users = new Handler(Looper.getMainLooper()) {
@@ -210,7 +243,30 @@ public class Game extends Activity{
 
         }
     };
+    private Emitter.Listener on_lista_utenti_online = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
 
+            JSONObject obj = (JSONObject) args[0];
+
+            try
+            {
+                System.out.println("WORDSWORDS_LOG: Ricezione dal Server della lista utenti online " + obj.getString("utenti"));
+                Bundle bibbo = new Bundle();
+                bibbo.putString("lista" , obj.getString("utenti"));
+
+                Message message = handler_online.obtainMessage();
+                message.setData(bibbo);
+                message.sendToTarget();
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+
+        }
+    };
 
     //Ricezione dal Server della lista utenti in partita da far vedere nella Listview
     private Emitter.Listener on_lista_utenti = new Emitter.Listener() {
@@ -347,7 +403,7 @@ public class Game extends Activity{
         //GESTIONE SOCKET
 
 
-        GlobalState.getmSocket().on("cerca_partita", on_cerca_partita).on("partita_distrutta", on_partita_distrutta).on("utente_entrato", on_cerca_amico).on("invito_inviato", on_amico_trovato).on("lista_utenti", on_lista_utenti).on("trasferimento_partita", on_trasferimento_partita).on("abbastanza", on_abbastanza).on("entra_giocatore",on_entra_giocatore);
+        GlobalState.getmSocket().on("cerca_partita", on_cerca_partita).on("partita_distrutta", on_partita_distrutta).on("utente_entrato", on_cerca_amico).on("invito_inviato", on_amico_trovato).on("lista_utenti", on_lista_utenti).on("trasferimento_partita", on_trasferimento_partita).on("abbastanza", on_abbastanza).on("entra_giocatore",on_entra_giocatore).on("lista_utenti_online", on_lista_utenti_online);
         Button btn_chiudi = (Button) findViewById(R.id.button_chiudi);
         btn_chiudi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -374,16 +430,16 @@ public class Game extends Activity{
         names = GlobalState.getUtenti_online();
         final Context ctx = this;
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,names);
-        final ListView lv;
-        lv = (ListView) findViewById(R.id.lista_online_game);
-        lv.setAdapter(adapter);
+
+        lvo = (ListView) findViewById(R.id.lista_online_game);
+        lvo.setAdapter(adapter);
 
         invitables.setThreshold(1);
         invitables.setAdapter(adapter);
 
 //        new GetAllFriends((ListView) findViewById(R.id.lista_amici),this).execute(GlobalState.getDb());
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adattatore, final View componente, int pos, long id){
                 // qui dentro stabilisco cosa fare dopo il click
@@ -514,7 +570,7 @@ public class Game extends Activity{
         });
         //Inizia Partita
 
-        Button bstart = (Button) findViewById(R.id.bottone_start);
+        final Button bstart = (Button) findViewById(R.id.bottone_start);
 
         bstart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -531,6 +587,7 @@ public class Game extends Activity{
 //                }
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
+                bstart.setEnabled(false);
                 GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
                 GlobalState.setAbbasta(false);
 
@@ -546,6 +603,7 @@ public class Game extends Activity{
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
                 GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
+                System.out.println("WORDSWORDS_LOG: distruggo: " + GlobalState.getId_stanza_attuale());
 
             }
         });
