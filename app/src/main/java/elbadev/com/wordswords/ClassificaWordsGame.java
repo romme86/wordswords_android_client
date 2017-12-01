@@ -220,7 +220,6 @@ public class ClassificaWordsGame extends Activity {
                     System.out.println("WORDSWORDS_LOG: .......... " + pro.getString("voto"));
                     riga.addView(voto);
 
-
                     tabella.addView(riga, new TableLayout.LayoutParams());
 
 

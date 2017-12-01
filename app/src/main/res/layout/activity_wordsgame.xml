@@ -58,6 +58,13 @@
                         android:textSize="30sp"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="TextView" />
+
                 </LinearLayout>
 
                 <TextView
@@ -95,7 +102,8 @@
                     android:id="@+id/testo"
                     android:layout_width="263dp"
                     android:layout_height="wrap_content"
-                    android:digits="ABCDEFGHILMONPQRSTUVZXYJKWabcdefghilmnopqrstuvzxywkj,.?;:'!1234567890éáíóúàìùòè"
+                    android:digits="A BCDEFGHILMONPQRSTUVZXYJKWabcdefghilmnopqrstuvzxywkj1234567890éáíóúàìùòè.!:;?'&quot;,()"
+                    android:elevation="0dp"
                     android:ems="10"
                     android:hint="..."
                     android:inputType="textVisiblePassword"
@@ -170,9 +178,9 @@
                     android:layout_marginRight="100dp"
                     android:layout_marginTop="20sp"
                     android:background="@drawable/bottone"
+                    android:text="Conferma Voto"
                     android:textAlignment="center"
                     android:textColor="@color/giallino"
-                    android:text="Conferma Voto"
                     android:visibility="gone" />
 
                 <ProgressBar
@@ -182,7 +190,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.14"
                     android:visibility="gone" />
-
 
 
             </LinearLayout>

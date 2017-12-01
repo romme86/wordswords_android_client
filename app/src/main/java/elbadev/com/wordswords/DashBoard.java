@@ -373,6 +373,7 @@ public class DashBoard extends Activity {
 
                 IO.Options opts = new IO.Options();
                 opts.query = "token=" + fsocket;
+                //opts.transports = new String[]{"websocket"};
                 opts.forceNew = false;
                 opts.reconnection = true;
                 //Passo il Socket creato alla classe genearale
