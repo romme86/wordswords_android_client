@@ -52,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.microedition.khronos.opengles.GL;
+
 public class DashBoard extends Activity {
 
     private DrawerLayout mDrawerLayout;
@@ -71,11 +73,77 @@ public class DashBoard extends Activity {
         //super.onBackPressed();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        System.out.println("WORDSWORDS_LOG: dashboard resumed");
         Button button1 = (Button) findViewById(R.id.button_start);
         button1.setEnabled(true);
+        //se in global state logout é a true eseguo il logout
+        if(GlobalState.isLogout()){
+            LinearLayout wait_layout = findViewById(R.id.wait_layout);
+            wait_layout.setVisibility(View.VISIBLE);
+            Runnable slogga = new Runnable() {
+                @Override
+                public void run() {
+                    //do work
+                    GlobalState.setLogout(false);
+                    System.out.println("WORDSWORDS_LOG: eseguo logout");
+                    onDestroy();
+                    RequestQueue mRequestQueue;
+                    Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+                    Network network = new BasicNetwork(new HurlStack());
+                    mRequestQueue = new RequestQueue(cache, network);
+                    mRequestQueue.start();
+                    JSONObject postParam = new JSONObject();
+                    try {
+                        postParam.put("email", GlobalState.getMia_email());
+                        postParam.put("password", GlobalState.getMia_password());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JSONObject pino = postParam;
+                    System.out.println("WORDSWORDS_LOG: JSON OUTPUT di logout->" + pino.toString());
+                    GlobalState.getmSocket().emit("distruggi_partita", "Cessa sta Ressa");
+                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                            GlobalState.getAddress() + "logout", pino,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getInt("logout_ok") == 1) {
+                                            finish();
+                                        }
+                                        else {
+
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
+                        }
+                    }) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json; charset=utf-8");
+                            return headers;
+                        }
+                    };
+                    mRequestQueue.add(jsonObjReq);
+                }
+            };
+            (new Handler()).postDelayed(slogga, 3000);
+        }else{
+            LinearLayout wait_layout = findViewById(R.id.wait_layout);
+            wait_layout.setVisibility(View.GONE);
+        }
     }
 
     //HANDLER
@@ -387,7 +455,8 @@ public class DashBoard extends Activity {
 
 
         setContentView(R.layout.activity_dashboard);
-
+        LinearLayout wait_layout = findViewById(R.id.wait_layout);
+        wait_layout.setVisibility(View.GONE);
 
 
 
@@ -492,7 +561,7 @@ public class DashBoard extends Activity {
                 v.startAnimation(button_as);
               //  GlobalState.getButtonSound().start();
                 GlobalState.getmSocket().emit("cerca_partita", "Voglio unirmi a una partita casuale");
-                System.out.println("WORDSWORDS_LOG:  bunion -> aCAlimero");
+                System.out.println("WORDSWORDS_LOG:  bunion");
 
             }
         });

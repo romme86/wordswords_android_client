@@ -267,6 +267,7 @@ public class ClassificaWordsGame extends Activity {
         foward.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(button_as);
+                GlobalState.setSemaforo_game(true);
                 GlobalState.getButtonSound().start();
                 GlobalState.getmSocket().emit("prossimo_turno", "prossimo_turno");
                 foward.setVisibility(View.GONE);
@@ -482,6 +483,7 @@ public class ClassificaWordsGame extends Activity {
         foward.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 v.startAnimation(button_as);
+                GlobalState.setSemaforo_game(true);
                 GlobalState.getButtonSound().start();
                 GlobalState.getmSocket().emit("prossimo_turno", "prossimo_turno");
                 foward.setVisibility(View.GONE);

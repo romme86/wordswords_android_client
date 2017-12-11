@@ -49,6 +49,7 @@ public class Ending extends Activity {
             public void onClick(View v) {
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
+                GlobalState.setLogout(true);
                 GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
             }
         });

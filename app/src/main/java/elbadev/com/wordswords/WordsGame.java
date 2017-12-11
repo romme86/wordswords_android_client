@@ -49,16 +49,11 @@ import java.util.Random;
 public class WordsGame extends Activity {
 
     final AnimationSet button_as = new AnimationSet(true);
-    Boolean paused_from_inside = false;
+
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        customToast(GlobalState.getRandomWisenessBackButton(), Toast.LENGTH_LONG);
+    public void onBackPressed(){
+        customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
         //super.onBackPressed();
     }
 
@@ -94,13 +89,14 @@ public class WordsGame extends Activity {
             bv.setVisibility(View.VISIBLE);
 
 
+
             final Bundle bobbo = message.getData();
 
             String users = bobbo.getString("utente");
             String finale = bobbo.getString("seconda");
 
-            System.out.println("WORDSWORDS_LOG: ::::::::: " + bobbo.getString("utente"));
-            System.out.println("WORDSWORDS_LOG: ::::::::: " + bobbo.getString("seconda"));
+            System.out.println("WORDSWORDS_LOG: ::::::::: " +  bobbo.getString("utente"));
+            System.out.println("WORDSWORDS_LOG: ::::::::: " +  bobbo.getString("seconda"));
 
             lv.setAdapter(null);
 
@@ -119,23 +115,26 @@ public class WordsGame extends Activity {
             String[] spirit_user = users.split("___");
 
 
-            for (int i = 0; i < spirit.length; i++) {
+
+            for(int i = 0; i < spirit.length; i++) {
 
                 System.out.println("WORDSWORDS_LOG: ::::::::: " + spirit_user[i]);
                 System.out.println("WORDSWORDS_LOG: ::::::::: " + spirit[i]);
-                if (spirit_user[i] != null) {
+                if(spirit_user[i] != null){
                     System.out.println("WORDSWORDS_LOG: -.-.-.-.-.-. " + spirit_user[i]);
-                    if (spirit_user[i].equals("giusta")) {
+                    if(spirit_user[i].equals("giusta"))
+                    {
                         position_true = i;
                         System.out.println("WORDSWORDS_LOG: dentro giusta");
                     }
                     fruits_list.add(" ..." + spirit[i]);
-                    if (spirit_user[i].equals(GlobalState.getMia_email())) {
+                    if(spirit_user[i].equals(GlobalState.getMia_email()))
+                    {
                         GlobalState.setPosizione_mia_frase(i);
                     }
                     arrayAdapter.notifyDataSetChanged();
                     System.out.println("WORDSWORDS_LOG: finale :::: " + spirit[i]);
-                } else {
+                }else{
                     System.out.println("WORDSWORDS_LOG: spirit[i] è null");
                 }
 
@@ -148,8 +147,10 @@ public class WordsGame extends Activity {
                     GlobalState.getButtonSound().start();
 
 
+
                     System.out.println("WORDSWORDS_LOG: Posizione inviata " + GlobalState.getPosizione_lista());
-                    if (GlobalState.getPosizione_lista() == position_true) {
+                    if(GlobalState.getPosizione_lista() == position_true)
+                    {
                         System.out.println("WORDSWORDS_LOG: dentro uguale");
                         GlobalState.getmSocket().emit("voto", -1);
                         Button bv2 = (Button) findViewById(R.id.button_voto);
@@ -157,9 +158,13 @@ public class WordsGame extends Activity {
 
                         ProgressBar ld2 = (ProgressBar) findViewById(R.id.load_finale);
                         ld2.setVisibility(View.VISIBLE);
-                    } else if (GlobalState.getPosizione_lista() == -2) {
-                        customToast("devi scegliere un finale prima! ", Toast.LENGTH_LONG);
-                    } else {
+                    }
+                    else if(GlobalState.getPosizione_lista() == -2)
+                    {
+                        customToast("devi scegliere un finale prima! ",Toast.LENGTH_LONG);
+                    }
+                    else
+                    {
                         GlobalState.getmSocket().emit("voto", GlobalState.getPosizione_lista());
                         Button bv2 = (Button) findViewById(R.id.button_voto);
                         bv2.setVisibility(View.GONE);
@@ -181,9 +186,9 @@ public class WordsGame extends Activity {
         @Override
         public void handleMessage(Message message) {
 
-            final Bundle bobbo = message.getData();
+           final Bundle bobbo = message.getData();
 
-            GlobalState.setTurno(GlobalState.getTurno() + 1);
+            GlobalState.setTurno(GlobalState.getTurno()+1);
             System.out.println("WORDSWORDS_LOG: trasferimento partita " + bobbo.getString("prima_parte"));
             Intent i = GlobalState.getTurno_gioco();
             i.putExtra("prima_parte", bobbo.getString("prima_parte"));
@@ -192,11 +197,11 @@ public class WordsGame extends Activity {
             i.putExtra("autore", bobbo.getString("autore"));
             i.putExtra("tipo", bobbo.getString("tipo"));
             GlobalState.setTurno_gioco(i);
-            System.out.println("WORDSWORDS_LOG: parametri: titolo " + i.getStringExtra("titolo") + "autore " + i.getStringExtra("autore") + "tipo " + i.getStringExtra("tipo"));
+            System.out.println("WORDSWORDS_LOG: parametri: titolo " + i.getStringExtra("titolo") + "autore " + i.getStringExtra("autore")+ "tipo " + i.getStringExtra("tipo") );
             GlobalState.setFrase_giusta_inizio(bobbo.getString("prima_parte"));
-            if (bobbo.getString("seconda_parte") != null) {
+            if(bobbo.getString("seconda_parte") != null) {
                 GlobalState.setFrase_giusta_fine(bobbo.getString("seconda_parte"));
-            } else {
+            }else{
                 System.out.println("WORDSWORDS_LOG: seconda parte null 1");
             }
             i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -218,15 +223,18 @@ public class WordsGame extends Activity {
 
             JSONObject obj = (JSONObject) args[0];
 
-            try {
+            try
+            {
                 System.out.println("WORDSWORDS_LOG: -------->>>>>>> ");
                 Bundle bibbo = new Bundle();
-                bibbo.putString("utente", obj.getString("utenti"));
-                bibbo.putString("seconda", obj.getString("seconde_parti"));
+                bibbo.putString("utente" , obj.getString("utenti"));
+                bibbo.putString("seconda" , obj.getString("seconde_parti"));
                 Message message = handler_fine_attesa.obtainMessage();
                 message.setData(bibbo);
                 message.sendToTarget();
-            } catch (JSONException e) {
+            }
+            catch(JSONException e)
+            {
                 e.printStackTrace();
             }
 
@@ -262,17 +270,20 @@ public class WordsGame extends Activity {
                 e.printStackTrace();
             }
 
-            if (GlobalState.getTurno() <= 1) {
-                Intent i = new Intent(WordsGame.this, ClassificaWordsGame.class);
-                GlobalState.setTurno_classifica(i);
-                startActivity(i);
-            } else {
+            if(GlobalState.getTurno() <= 1)
+            {
+                     Intent i = new Intent(WordsGame.this, ClassificaWordsGame.class);
+                     GlobalState.setTurno_classifica(i);
+                     startActivity(i);
+            }
+            else
+            {
                 Intent j = GlobalState.getTurno_classifica();
-                if (j == null) {
+                if(j == null){
                     Intent i = new Intent(WordsGame.this, ClassificaWordsGame.class);
                     GlobalState.setTurno_classifica(i);
                     startActivity(i);
-                } else {
+                }else{
                     j.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivityIfNeeded(j, 0);
                 }
@@ -290,23 +301,26 @@ public class WordsGame extends Activity {
 
             JSONObject obj = (JSONObject) args[0];
 
-            try {
+            try
+            {
                 Bundle bibbo = new Bundle();
-                bibbo.putString("titolo", obj.getString("titolo"));
+                bibbo.putString("titolo" , obj.getString("titolo"));
                 System.out.println("WORDSWORDS_LOG: on_pronti_per_prossimo_turno " + obj.getString("prima_parte"));
-                bibbo.putString("prima_parte", obj.getString("prima_parte"));
-                bibbo.putString("autore", obj.getString("autore"));
-                bibbo.putString("tipo", obj.getString("tipo"));
-                if (obj.getString("seconda_parte") != null) {
+                bibbo.putString("prima_parte" , obj.getString("prima_parte"));
+                bibbo.putString("autore" , obj.getString("autore"));
+                bibbo.putString("tipo" , obj.getString("tipo"));
+                if(obj.getString("seconda_parte") != null) {
                     GlobalState.setFrase_giusta_fine(obj.getString("seconda_parte"));
-                } else {
+                }else{
                     System.out.println("WORDSWORDS_LOG: seconda parte null 2");
                 }
                 Message message = handler_nuovo_turno.obtainMessage();
                 message.setData(bibbo);
                 message.sendToTarget();
 
-            } catch (JSONException e) {
+            }
+            catch(JSONException e)
+            {
                 e.printStackTrace();
             }
 
@@ -316,16 +330,161 @@ public class WordsGame extends Activity {
     //<<<<<<<<<   FINE LISTA EMETTITORI    >>>>>>>>>
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_wordsgame);
 
+        final Animation button_translate = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
+        final Animation button_scale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
+        //GlobalState.getTypewriter_multi_sound().start();
+
+        button_as.addAnimation(button_translate);
+        button_as.addAnimation(button_scale);
+
+
+        GlobalState.setPosizione_lista(-2);
+        GlobalState.setPosizione_mia_frase(-2);
+        TextView testo_turno = (TextView) findViewById(R.id.titolo_partita);
+        testo_turno.setText("Turno " + GlobalState.getTurno());
+
+        // Get ListView object from xml
+        lv = (ListView) findViewById(R.id.all_frasi);
+
+        String[] fruits = new String[]{};
+
+        fruits_list = new ArrayList<String>(Arrays.asList(fruits));
+        arrayAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1, fruits_list);
+
+
+        // Assign adapter to ListView
+        lv.setAdapter(arrayAdapter);
+
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+
+                System.out.println("WORDSWORDS_LOG: **************** " +  GlobalState.getPosizione_mia_frase());
+
+                if(position == GlobalState.getPosizione_mia_frase())
+                {
+                    customToast("Non puoi Autovotarti Laidone!!! ",Toast.LENGTH_LONG);
+
+                    GlobalState.setPosizione_lista(-2);
+                }
+                else
+                {
+//                    Toast.makeText(WordsGame.this, "Ho pigiato " + position, Toast.LENGTH_SHORT).show();
+                    for (int i = 0; i < lv.getChildCount(); i++) {
+                        View listItem = lv.getChildAt(i);
+                        listItem.setBackgroundColor(Color.TRANSPARENT);
+                    }
+
+                    view.setBackgroundColor(Color.argb(125,75,236,90));
+                    GlobalState.setPosizione_lista(position);
+                }
+
+            }
+        });
+
+        //GESTIONE SOCKET
+
+        GlobalState.getmSocket().on("tutti_pronti", on_tutti_pronti).on("voto_singolo", on_voto_singolo).on("classifica", on_classifica).on("pronti_per_prossimo_turno", on_pronti_per_prossimo_turno);
+        GlobalState.setSemaforo_game(true);
+
+//        Intent g = getIntent();
+//
+//        TextView tit = (TextView) findViewById(R.id.titolo);
+//        TextView aut = (TextView) findViewById(R.id.autore);
+//
+//        String tipo = g.getStringExtra("tipo");
+//
+//
+//        final TypeWriter tvg = (TypeWriter) findViewById(R.id.sentenza);
+//        tvg.setText("");
+////        tvg.animateText(g.getStringExtra("prima_parte"));
+//
+//        Random rand = new Random();
+//        int n = rand.nextInt(3); // Gives n such that 0 <= n < 3
+//
+//        switch (tipo) {
+//            case "libro":
+//                tit.setText("Titolo del libro : " + g.getStringExtra("titolo"));
+//                aut.setText("Autore del libro : " + g.getStringExtra("autore"));
+//                break;
+//            case "film":
+//                tit.setText("Titolo del film : " + g.getStringExtra("titolo"));
+//                aut.setText("Regista del film : " + g.getStringExtra("autore"));
+//                break;
+//            case "canzone":
+//                tit.setText("Titolo della canzone : " + g.getStringExtra("titolo"));
+//                aut.setText("Autore della canzone : " + g.getStringExtra("autore"));
+//                break;
+//            case "pubblicità":
+//                tit.setText("Marca : " + g.getStringExtra("titolo"));
+//                aut.setText("Produttore : " + g.getStringExtra("autore"));
+//                break;
+//        }
+//        tvg.lowBound = 80;
+//        tvg.upBound = 150;
+//        //metto l'inizio frase in global state
+//        if(g.getStringExtra("prima_parte") != null) {
+//            GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
+//        }
+//        if(g.getStringExtra("seconda_parte") != null) {
+//            GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
+//        }else{
+//            System.out.println("WORDSWORDS_LOG: seconda parte null 3");
+//        }
+//        tvg.animateText(g.getStringExtra("prima_parte"));
+//
+//        final Button scelta = (Button) findViewById(R.id.invia_scelta);
+//        final TextView wt = (TextView) findViewById(R.id.wait_text);
+//        final EditText edo = (EditText) findViewById(R.id.testo);
+//        scelta.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                v.startAnimation(button_as);
+//                GlobalState.getButtonSound().start();
+//                GlobalState.getmSocket().emit("invio_scelta", GlobalState.getId_stanza_attuale() + "," + edo.getText());
+//                ProgressBar ld = (ProgressBar) findViewById(R.id.load);
+//                ld.setVisibility(View.VISIBLE);
+//                scelta.setVisibility(View.GONE);
+//                wt.setVisibility(View.VISIBLE);
+//                edo.setVisibility(View.GONE);
+//                //nascondo la tastiera NUOVO_DA_TESTARE
+//                System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
+//
+//                View view = WordsGame.this.getCurrentFocus();
+//                if (view != null) {
+//                    hideKeyboard(view);
+//                }
+//            }
+//        });
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(GlobalState.getSemaforo_game()){
+            eseguiTurno();
+        }
+    }
+
+    public void eseguiTurno(){
+        GlobalState.setSemaforo_game(false);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setContentView(R.layout.activity_wordsgame);
+//      multisound start
         final Animation button_translate = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
         final Animation button_scale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
         final AnimationSet button_as = new AnimationSet(true);
@@ -350,24 +509,28 @@ public class WordsGame extends Activity {
         lv.setAdapter(arrayAdapter);
 
 
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
 
-                System.out.println("WORDSWORDS_LOG: posizione frase " + GlobalState.getPosizione_mia_frase());
+                System.out.println("WORDSWORDS_LOG: posizione frase " +  GlobalState.getPosizione_mia_frase());
 
-                if (position == GlobalState.getPosizione_mia_frase()) {
-                    customToast("Non puoi Autovotarti Laidone!!! ", Toast.LENGTH_LONG);
+                if(position == GlobalState.getPosizione_mia_frase())
+                {
+                    customToast("Non puoi Autovotarti Laidone!!! ",Toast.LENGTH_LONG);
                     GlobalState.setPosizione_lista(-2);
-                } else {
-//                    Toast.makeText(WordsGame.this, "Ho pigiato " + position, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    //Toast.makeText(WordsGame.this, "Ho pigiato " + position, Toast.LENGTH_SHORT).show();
                     for (int i = 0; i < lv.getChildCount(); i++) {
                         View listItem = lv.getChildAt(i);
-                        listItem.setBackgroundColor(Color.WHITE);
+                        listItem.setBackgroundColor(Color.argb(0,107,81,19));
                     }
 
-                    view.setBackgroundColor(Color.argb(125, 75, 236, 90));
+                    view.setBackgroundColor(Color.argb(125,107,81,19));
                     GlobalState.setPosizione_lista(position);
                 }
 
@@ -375,13 +538,10 @@ public class WordsGame extends Activity {
         });
         Intent g = getIntent();
         Intent intento_nuovo = GlobalState.getTurno_gioco();
-        if (GlobalState.getTurno_gioco() != null) {
+        if(GlobalState.getTurno_gioco() != null){
             g = intento_nuovo;
         }
 
-        //GESTIONE SOCKET
-
-        GlobalState.getmSocket().on("tutti_pronti", on_tutti_pronti).on("voto_singolo", on_voto_singolo).on("classifica", on_classifica).on("pronti_per_prossimo_turno", on_pronti_per_prossimo_turno);
 
         TextView tit = (TextView) findViewById(R.id.titolo);
         TextView aut = (TextView) findViewById(R.id.autore);
@@ -390,11 +550,7 @@ public class WordsGame extends Activity {
         String tipo = g.getStringExtra("tipo");
 // timer
         final Button scelta = (Button) findViewById(R.id.invia_scelta);
-        final TextView textTimer = (TextView) findViewById(R.id.timer);
-
-
-        tvg.setText("");
-//        tvg.animateText(g.getStringExtra("prima_parte"));
+        final TextView textTimer = (TextView)findViewById(R.id.timer);
 
         Random rand = new Random();
         int n = rand.nextInt(3); // Gives n such that 0 <= n < 3
@@ -412,7 +568,7 @@ public class WordsGame extends Activity {
                 tit.setText("Titolo della canzone : " + g.getStringExtra("titolo"));
                 aut.setText("Autore della canzone : " + g.getStringExtra("autore"));
                 break;
-            case "pubblicitÃ ":
+            case "pubblicità":
                 tit.setText("Marca : " + g.getStringExtra("titolo"));
                 aut.setText("Produttore : " + g.getStringExtra("autore"));
                 break;
@@ -420,32 +576,32 @@ public class WordsGame extends Activity {
         tvg.lowBound = 80;
         tvg.upBound = 150;
         tvg.animateText(g.getStringExtra("prima_parte"));
-        System.out.println("WORDSWORDS_LOG: inzio: " + g.getStringExtra("prima_parte") + " -fine: " + g.getStringExtra("seconda_parte"));
-        if (g.getStringExtra("prima_parte") != null) {
+        System.out.println("WORDSWORDS_LOG: inzio: " + g.getStringExtra("prima_parte") + " -fine: " +  g.getStringExtra("seconda_parte"));
+        if(g.getStringExtra("prima_parte") != null) {
             GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
         }
-        if (g.getStringExtra("seconda_parte") != null) {
+        if(g.getStringExtra("seconda_parte") != null) {
             GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
-        } else {
-            System.out.println("WORDSWORDS_LOG: seconda parte null 3");
+        }else{
+            System.out.println("WORDSWORDS_LOG: seconda parte null 4");
         }
-        tvg.animateText(g.getStringExtra("prima_parte"));
+
 
         final TextView wt = (TextView) findViewById(R.id.wait_text);
         final EditText edo = (EditText) findViewById(R.id.testo);
 
-        edo.setFilters(new InputFilter[]{
+        edo.setFilters(new InputFilter[] {
                 new InputFilter() {
                     @Override
                     public CharSequence filter(CharSequence cs, int start, int end, Spanned spanned, int dStart, int dEnd) {
                         // TODO Auto-generated method stub
-                        if (cs.equals("")) { // for backspace
+                        if(cs.equals("")){ // for backspace
                             return cs;
                         }
-                        if (cs.toString().matches("[a-zA-Z0-9 !?:;Ã©Ã¡Ã­Ã³ÃºÃ¨Ã Ã¹Ã¬Ã²[(][)][,]\"\'[.]]+")) {
+                        if(cs.toString().matches("[a-zA-Z0-9 !?:;éáíóúèàùìò[(][)][,]\"\'[.]]+")){
                             return cs;
-                        } else {
-                            customToast("alcuni caratteri non sono consentiti.", Toast.LENGTH_SHORT);
+                        }else {
+                            customToast("alcuni caratteri non sono consentiti.",Toast.LENGTH_SHORT);
                         }
                         return "";
                     }
@@ -455,8 +611,8 @@ public class WordsGame extends Activity {
         final CountDownTimer il_mio_timer = new CountDownTimer(60000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                textTimer.setText("0:" + (millisUntilFinished / 1000));
-                if (millisUntilFinished / 1000 <= 1) {
+                textTimer.setText("0:" + (millisUntilFinished/1000));
+                if(millisUntilFinished/1000<=1){
                     GlobalState.getmSocket().emit("invio_scelta", edo.getText());
                     ProgressBar ld = (ProgressBar) findViewById(R.id.load);
                     ld.setVisibility(View.VISIBLE);
@@ -467,7 +623,7 @@ public class WordsGame extends Activity {
                         System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
                         hideKeyboard(binderino);
                     }
-                    paused_from_inside = true;
+
                     textTimer.setText("tempo scaduto");
                     this.cancel();
                 }
@@ -492,222 +648,36 @@ public class WordsGame extends Activity {
                     System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
                     hideKeyboard(v);
                 }
-                paused_from_inside = true;
-
-                View view = WordsGame.this.getCurrentFocus();
-                if (view != null) {
-                    hideKeyboard(view);
-                }
             }
         });
 
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        if (paused_from_inside) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//
-//            setContentView(R.layout.activity_wordsgame);
-////      multisound start
-//            final Animation button_translate = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
-//            final Animation button_scale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
-//            final AnimationSet button_as = new AnimationSet(true);
-//            button_as.addAnimation(button_translate);
-//            button_as.addAnimation(button_scale);
-//            GlobalState.setPosizione_lista(-2);
-//            GlobalState.setPosizione_mia_frase(-2);
-//            TextView testo_turno = (TextView) findViewById(R.id.titolo_partita);
-//            testo_turno.setText("Turno " + GlobalState.getTurno());
-//
-//            // Get ListView object from xml
-//            lv = (ListView) findViewById(R.id.all_frasi);
-//
-//            String[] fruits = new String[]{};
-//
-//            fruits_list = new ArrayList<String>(Arrays.asList(fruits));
-//            arrayAdapter = new ArrayAdapter<String>
-//                    (this, android.R.layout.simple_list_item_1, fruits_list);
-//
-//
-//            // Assign adapter to ListView
-//            lv.setAdapter(arrayAdapter);
-//
-//
-//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                public void onItemClick(AdapterView<?> parent, View view,
-//                                        int position, long id) {
-//
-//
-//                    System.out.println("WORDSWORDS_LOG: posizione frase " + GlobalState.getPosizione_mia_frase());
-//
-//                    if (position == GlobalState.getPosizione_mia_frase()) {
-//                        customToast("Non puoi Autovotarti Laidone!!! ", Toast.LENGTH_LONG);
-//                        GlobalState.setPosizione_lista(-2);
-//                    } else {
-//                        //Toast.makeText(WordsGame.this, "Ho pigiato " + position, Toast.LENGTH_SHORT).show();
-//                        for (int i = 0; i < lv.getChildCount(); i++) {
-//                            View listItem = lv.getChildAt(i);
-//                            listItem.setBackgroundColor(Color.argb(0, 107, 81, 19));
-//                        }
-//
-//                        view.setBackgroundColor(Color.argb(125, 107, 81, 19));
-//                        GlobalState.setPosizione_lista(position);
-//                    }
-//
-//                }
-//            });
-//            Intent g = getIntent();
-//            Intent intento_nuovo = GlobalState.getTurno_gioco();
-//            if (GlobalState.getTurno_gioco() != null) {
-//                g = intento_nuovo;
-//            }
-//
-//
-//            TextView tit = (TextView) findViewById(R.id.titolo);
-//            TextView aut = (TextView) findViewById(R.id.autore);
-//            final TypeWriter tvg = (TypeWriter) findViewById(R.id.sentenza);
-//            tvg.setText("");
-//            String tipo = g.getStringExtra("tipo");
-//// timer
-//            final Button scelta = (Button) findViewById(R.id.invia_scelta);
-//            final TextView textTimer = (TextView) findViewById(R.id.timer);
-//
-//
-//            Random rand = new Random();
-//            int n = rand.nextInt(3); // Gives n such that 0 <= n < 3
-//            System.out.println("WORDSWORDS_LOG: onresumino" + g.getStringExtra("prima_parte") + tipo);
-//            switch (tipo) {
-//                case "libro":
-//                    tit.setText("Titolo del libro : " + g.getStringExtra("titolo"));
-//                    aut.setText("Autore del libro : " + g.getStringExtra("autore"));
-//                    break;
-//                case "film":
-//                    tit.setText("Titolo del film : " + g.getStringExtra("titolo"));
-//                    aut.setText("Regista del film : " + g.getStringExtra("autore"));
-//                    break;
-//                case "canzone":
-//                    tit.setText("Titolo della canzone : " + g.getStringExtra("titolo"));
-//                    aut.setText("Autore della canzone : " + g.getStringExtra("autore"));
-//                    break;
-//                case "pubblicità":
-//                    tit.setText("Marca : " + g.getStringExtra("titolo"));
-//                    aut.setText("Produttore : " + g.getStringExtra("autore"));
-//                    break;
-//            }
-//            tvg.lowBound = 80;
-//            tvg.upBound = 150;
-//            tvg.animateText(g.getStringExtra("prima_parte"));
-//            System.out.println("WORDSWORDS_LOG: inzio: " + g.getStringExtra("prima_parte") + " -fine: " + g.getStringExtra("seconda_parte"));
-//            if (g.getStringExtra("prima_parte") != null) {
-//                GlobalState.setFrase_giusta_inizio(g.getStringExtra("prima_parte"));
-//            }
-//            if (g.getStringExtra("seconda_parte") != null) {
-//                GlobalState.setFrase_giusta_fine(g.getStringExtra("seconda_parte"));
-//            } else {
-//                System.out.println("WORDSWORDS_LOG: seconda parte null 4");
-//            }
-//
-//
-//            final TextView wt = (TextView) findViewById(R.id.wait_text);
-//            final EditText edo = (EditText) findViewById(R.id.testo);
-//
-//            edo.setFilters(new InputFilter[]{
-//                    new InputFilter() {
-//                        @Override
-//                        public CharSequence filter(CharSequence cs, int start, int end, Spanned spanned, int dStart, int dEnd) {
-//                            // TODO Auto-generated method stub
-//                            if (cs.equals("")) { // for backspace
-//                                return cs;
-//                            }
-//                            if (cs.toString().matches("[a-zA-Z0-9 !?:;éáíóúèàùìò[(][)][,]\"\'[.]]+")) {
-//                                return cs;
-//                            } else {
-//                                customToast("alcuni caratteri non sono consentiti.", Toast.LENGTH_SHORT);
-//                            }
-//                            return "";
-//                        }
-//                    }
-//            });
-//            final IBinder binderino = getWindow().getDecorView().getWindowToken();
-//            final CountDownTimer il_mio_timer = new CountDownTimer(60000, 1000) {
-//
-//                public void onTick(long millisUntilFinished) {
-//                    textTimer.setText("0:" + (millisUntilFinished / 1000));
-//                    if (millisUntilFinished / 1000 <= 1) {
-//                        GlobalState.getmSocket().emit("invio_scelta", edo.getText());
-//                        ProgressBar ld = (ProgressBar) findViewById(R.id.load);
-//                        ld.setVisibility(View.VISIBLE);
-//                        scelta.setVisibility(View.GONE);
-//                        wt.setVisibility(View.VISIBLE);
-//                        edo.setVisibility(View.GONE);
-//                        if (binderino != null) {
-//                            System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
-//                            hideKeyboard(binderino);
-//                        }
-//                        paused_from_inside = true;
-//                        textTimer.setText("tempo scaduto");
-//                        this.cancel();
-//                    }
-//                }
-//
-//                public void onFinish() {
-//
-//
-//                }
-//
-//            }.start();
-//            scelta.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    GlobalState.getmSocket().emit("invio_scelta", edo.getText());
-//                    ProgressBar ld = (ProgressBar) findViewById(R.id.load);
-//                    ld.setVisibility(View.VISIBLE);
-//                    scelta.setVisibility(View.GONE);
-//                    wt.setVisibility(View.VISIBLE);
-//                    edo.setVisibility(View.GONE);
-//                    il_mio_timer.cancel();
-//                    if (v != null) {
-//                        System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
-//                        hideKeyboard(v);
-//                    }
-//                    paused_from_inside = true;
-//
-//                }
-//            });
-//        }
 
     }
 
-    public void customToast(String text, int duration) {
+    public void customToast(String text, int duration){
         LayoutInflater li = getLayoutInflater();
-        View view = li.inflate(R.layout.toast_layout, null);
+        View view = li.inflate(R.layout.toast_layout,null);
 
         TextView tv = (TextView) view.findViewById(R.id.custom_text);
         tv.setText(text);
         Toast custom_toast = new Toast(this);
         custom_toast.setView(view);
-        custom_toast.makeText(WordsGame.this, text, duration);
-        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 0);
+        custom_toast.makeText(WordsGame.this,text,duration);
+        custom_toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL,0 ,0);
         custom_toast.show();
     }
-
-    private void hideKeyboard(View view) {
+    private void hideKeyboard(View view){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         System.out.println("WORDSWORDS_LOG: nascosta tastiera! ");
     }
-
-    private void hideKeyboard(IBinder binder) {
+    private void hideKeyboard(IBinder binder){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(binder, 0);
         System.out.println("WORDSWORDS_LOG: nascosta tastiera! ");
     }
-
     public String checkDigit(int number) {
         return number <= 9 ? "0" + number : String.valueOf(number);
     }
-
 
 }

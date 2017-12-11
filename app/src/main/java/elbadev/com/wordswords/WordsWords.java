@@ -83,7 +83,81 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
     private String id_block_notes = "";
     private String prezzo_block_notes;
 
-
+@Override
+public void onResume(){
+    super.onResume();
+//    if(GlobalState.isLogout()){
+//        GlobalState.setLogout(false);
+//        RequestQueue mRequestQueue;
+//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+//        Network network = new BasicNetwork(new HurlStack());
+//        mRequestQueue = new RequestQueue(cache, network);
+//        mRequestQueue.start();
+//        GlobalState.getButtonSound().start();
+//        final TextView email = (TextView) findViewById(R.id.email);
+//        final TextView password = (TextView) findViewById(R.id.password);
+//        JSONObject postParam = new JSONObject();
+//        try {
+//            postParam.put("email", email.getText());
+//            postParam.put("password", password.getText());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        JSONObject pino = postParam;
+//        System.out.println("WORDSWORDS_LOG: JSON OUTPUT-> resume" + pino.toString());
+//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+//                Request.Method.POST,
+//                GlobalState.getAddress() + "login",
+//                pino,
+//                new Response.Listener<JSONObject>() {
+//
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            System.out.println("WORDSWORDS_LOG: Utente trovato:::::  " + response.getString("utente_trovato"));
+//                            if (response.getInt("utente_trovato") == 1) {
+//
+//                                GlobalState.setMia_email(email.getText().toString());
+//                                GlobalState.setMia_password(password.getText().toString());
+////                                      esistenza();
+//                                Intent i = new Intent(WordsWords.this, DashBoard.class);
+//                                GlobalState.setDesktop(i);
+//                                i.putExtra("token", response.getString("token"));
+//                                startActivity(i);
+//                                // salvo le credenziali nel DB
+//                                new InsertUser(GlobalState.getMia_email(),GlobalState.getMia_password()).execute(GlobalState.getDb());
+//                            } else {
+//                                customToast("Questo utente non esiste, puoi registrarti cliccando su REGISTRATI",Toast.LENGTH_LONG);
+////                                        Toast.makeText(WordsWords.this, " Utente non esistente ", Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                customToast("Prima inserisci Username e Password! Se le hai inserite potresti averle sbagliate.",Toast.LENGTH_LONG);
+////                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
+//                System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
+//
+//            }
+//        }) {
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                HashMap<String, String> headers = new HashMap<String, String>();
+//                headers.put("Content-Type", "application/json; charset=utf-8");
+//                return headers;
+//            }
+//        };
+//
+//        mRequestQueue.add(jsonObjReq);
+//
+//    }
+}
     @Override
     public void onBackPressed() {
         customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
@@ -220,6 +294,21 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
         FontsOverride.setDefaultFont(this, "SANS_SERIF", "OldNewspaperTypes.ttf");
 
         setContentView(R.layout.activity_wordswords);
+        //FACCIO ANDARE IL CARICAMENTO PER 2 SEC
+        final LinearLayout wait_layout = findViewById(R.id.wait_layout);
+        Runnable carica = new Runnable() {
+            @Override
+            public void run() {
+                wait_layout.setVisibility(View.GONE);
+                final TypeWriter tw = (TypeWriter) findViewById(R.id.title_login);
+                tw.setText("");
+                tw.animateText("Wordswords");
+                GlobalState.getTypewriter_multi_sound().start();
+            }
+        };
+        (new Handler()).postDelayed(carica, 2000);
+
+        //FINE CARICAMENTO
         GlobalState.setTypewriter_multi_sound(MediaPlayer.create(this, R.raw.typewriter_multitype_2));
         GlobalState.setTypewriter_button_sound_0(MediaPlayer.create(this, R.raw.typewriter_singletype_1));
         GlobalState.setTypewriter_button_sound_1(MediaPlayer.create(this, R.raw.typewriter_singletype_2));
@@ -240,10 +329,7 @@ public class WordsWords extends AppCompatActivity implements IabBroadcastReceive
 
 
 
-        final TypeWriter tw = (TypeWriter) findViewById(R.id.title_login);
-        tw.setText("");
-        tw.animateText("Wordswords");
-        GlobalState.getTypewriter_multi_sound().start();
+
 //        final Timer t = new Timer();
 //
 //        t.scheduleAtFixedRate(new TimerTask() {

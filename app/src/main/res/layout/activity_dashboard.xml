@@ -22,12 +22,16 @@
         android:src="@drawable/bg2"
         android:contentDescription="" />
 
+
+
+
+
     <GridLayout
         android:id="@+id/ribbon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.24"
-        android:elevation="3dp"
+        android:elevation="0dp"
         android:visibility="gone">
 
         <ImageView
@@ -37,19 +41,17 @@
             android:layout_column="0"
             android:layout_row="0"
             android:contentDescription=""
-            android:elevation="5dp"
+            android:elevation="0dp"
             android:src="@drawable/ribbon" />
     </GridLayout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
-        android:elevation="1dp"
+        android:elevation="0dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:orientation="vertical">
 
         <elbadev.com.wordswords.TypeWriter
             android:id="@+id/dashboard_title"
@@ -135,16 +137,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/giallino"
-        android:elevation="2dp"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:weightSum="1">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_rules"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.24"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center_horizontal"
             android:text="Come si gioca?"
             android:textColor="@android:color/black"
@@ -247,7 +247,44 @@
 
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/wait_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg4"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="144dp"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_weight="1"
+            android:baselineAlignBottom="false"
+            android:src="@drawable/unnamed" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/navi"
         android:layout_width="240dp"

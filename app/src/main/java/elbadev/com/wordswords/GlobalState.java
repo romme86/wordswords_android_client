@@ -22,6 +22,10 @@ public class GlobalState extends Application {
 
     static private Socket mSocket;
     private static Boolean setup_payment_done = false;
+
+
+
+    private static boolean logout = false;
     private static String address = "http://46.101.105.29/" ;//SERVER REMOTO
    //private static String address = "http://192.168.1.35:3000/";//SERVER UFFICIO
 //   private static final String base64EncodePublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApCM/a4Nn5xBE3fFeSrOv3QqiA7IoCfy08x9BRP7PrmP9PgDihCLAPjR+5BeUy7cIl4kIayUVAd0qZcccDdgSMkgkx5jBexGDyrDpUkaybGVvWIDZ3SKidp9JxFwDE5zyFn52NNy3Sp/+k/walE2c+3YV5QA8p1OF/2qV71cYuCploU5vX1LXYmu6NEG77lccZ2gQKC3VwrBUCKuZnoSUBdfqtn1gzhJmb7h1f1LKdNwz7vwJtux5N0IRouPHkFwuX7CRbmZBhocRbLR5kge5NUhibY4FBNCFUUSN967qmo+v69fZcrY6cSpAIdtuOJKHDcULZCJMf/62ARwiN/sFHQIDAQAB";
@@ -55,11 +59,22 @@ public class GlobalState extends Application {
     static private Boolean prima_esistenza = true;
     static private Boolean abbasta = false;
     static private Boolean sofia = false;
+
+    public static Boolean getSemaforo_game() {
+        return semaforo_game;
+    }
+
+    public static void setSemaforo_game(Boolean semaforo_game) {
+        GlobalState.semaforo_game = semaforo_game;
+    }
+
+    static private Boolean semaforo_game= false;
     static private Integer miei_punti = 0;
     static private String utenti_online[] = null ;
     static private String vincitore;
     static private Integer punti_vincitore;
     static private AppDatabase db;
+
 
 
     public static final String getBase64publicKey(){ return  GlobalState.base64EncodePublicKey; }
@@ -346,13 +361,19 @@ public class GlobalState extends Application {
     public static void setFrase_giusta_inizio(String frase_giusta_inizio) {
         GlobalState.frase_giusta_inizio = frase_giusta_inizio;
     }
-
+    public static boolean isLogout() {
+        return logout;
+    }
     public static String getFrase_giusta_fine() {
         return frase_giusta_fine;
     }
 
     public static void setFrase_giusta_fine(String frase_giusta_fine) {
         GlobalState.frase_giusta_fine = frase_giusta_fine;
+    }
+
+    public static void setLogout(boolean logout) {
+        GlobalState.logout = logout;
     }
 
     @Override
