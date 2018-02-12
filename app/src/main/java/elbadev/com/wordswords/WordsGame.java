@@ -608,7 +608,7 @@ public class WordsGame extends Activity {
                 }
         });
         final IBinder binderino = getWindow().getDecorView().getWindowToken();
-        final CountDownTimer il_mio_timer = new CountDownTimer(60000, 1000) {
+        final CountDownTimer il_mio_timer = new CountDownTimer(120000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 textTimer.setText("0:" + (millisUntilFinished/1000));
