@@ -56,7 +56,41 @@ public class Game extends Activity{
     List<String> fruits_list = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
     List<String> lista_gamers = new ArrayList<>();
+
     //HANDLER
+
+    //Handler Popup
+    private Handler handler_alert = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message message) {
+
+            final Bundle bobbo = message.getData();
+
+            AlertDialog alert = new AlertDialog.Builder(Game.this).create();
+            alert.setTitle("Invito di Gioco");
+            alert.setMessage(bobbo.getString("nome") + " ti ha invitato a giocare! Vuoi partecipare?");
+            alert.setButton(Dialog.BUTTON_NEGATIVE,"No",new DialogInterface.OnClickListener(){
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    System.out.println("WORDSWORDS_LOG: +++++++++++");
+                    GlobalState.getmSocket().emit("invito_respinto", bobbo.getString("room"));
+                }
+            });
+            alert.setButton(Dialog.BUTTON_POSITIVE,"Si",new DialogInterface.OnClickListener(){
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    System.out.println("WORDSWORDS_LOG: ?????????????????????????????  " + bobbo.getString("room") );
+                    GlobalState.getmSocket().emit("invito_accettato", bobbo.getString("room"));
+                    GlobalState.setId_stanza_attuale(bobbo.getString("room"));
+                    GlobalState.setLeader(0);
+                }
+            });
+            alert.show();
+        }
+    };
+
 
     //Handler Toast Gnam
     private Handler handler_toast = new Handler(Looper.getMainLooper()) {
@@ -141,6 +175,8 @@ public class Game extends Activity{
                 }
         }
     };
+
+    //HANDLER
 
     //<<<<<<<<<   INIZIO LISTA EMETTITORI    >>>>>>>>>
 
@@ -294,6 +330,37 @@ public class Game extends Activity{
         }
     };
 
+    //Arriva invito di gioco
+    private Emitter.Listener on_notifica_invito = new Emitter.Listener()
+    {
+        @Override
+        public void call(Object... args) {
+            System.out.println("WORDSWORDS_LOG: Invito Ricevuto");
+            JSONObject obj = (JSONObject)args[0];
+
+            try
+            {
+                Bundle bibbo = new Bundle();
+                bibbo.putString("nome", obj.getString("nome"));
+                bibbo.putString("room", obj.getString("room_id"));
+
+                Message message = handler_alert.obtainMessage();
+                message.setData(bibbo);
+                message.sendToTarget();
+            }
+            catch(JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+
+        }
+    };
+
+
+
+
+
     //<<<<<<<<<   FINE LISTA EMETTITORI    >>>>>>>>>
 
     @Override
@@ -402,8 +469,8 @@ public class Game extends Activity{
 
         //GESTIONE SOCKET
 
+        GlobalState.getmSocket().on("cerca_partita", on_cerca_partita).on("partita_distrutta", on_partita_distrutta).on("utente_entrato", on_cerca_amico).on("invito_inviato", on_amico_trovato).on("lista_utenti", on_lista_utenti).on("trasferimento_partita", on_trasferimento_partita).on("abbastanza", on_abbastanza).on("entra_giocatore",on_entra_giocatore).on("lista_utenti_online", on_lista_utenti_online).on("invito", on_notifica_invito);
 
-        GlobalState.getmSocket().on("cerca_partita", on_cerca_partita).on("partita_distrutta", on_partita_distrutta).on("utente_entrato", on_cerca_amico).on("invito_inviato", on_amico_trovato).on("lista_utenti", on_lista_utenti).on("trasferimento_partita", on_trasferimento_partita).on("abbastanza", on_abbastanza).on("entra_giocatore",on_entra_giocatore).on("lista_utenti_online", on_lista_utenti_online);
         Button btn_chiudi = (Button) findViewById(R.id.button_chiudi);
         btn_chiudi.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
