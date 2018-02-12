@@ -553,7 +553,7 @@ public class DashBoard extends Activity {
 
 
         //BOTTONE CERCA PARTITA
-        final Button bunion = (Button) findViewById(R.id.button_union);
+    /*    final Button bunion = (Button) findViewById(R.id.button_union);
 
         bunion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -565,7 +565,7 @@ public class DashBoard extends Activity {
 
             }
         });
-
+    */
 
         //LOGOUT
         final Button bottone_logout = (Button) findViewById(R.id.button_logout);

@@ -97,7 +97,7 @@
             android:textAlignment="center"
             android:textColor="@color/giallino"
             android:textStyle="bold"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_history"
