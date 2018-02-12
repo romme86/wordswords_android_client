@@ -204,7 +204,7 @@ public class Game extends Activity{
         @Override
         public void call(Object... args) {
             System.out.println("WORDSWORDS_LOG: Fine Partita");
-            finish();
+            //finish();
         }
     };
 
