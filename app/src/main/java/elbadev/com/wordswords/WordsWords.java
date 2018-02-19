@@ -2,6 +2,8 @@ package elbadev.com.wordswords;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
 import android.content.ComponentName;
@@ -70,190 +72,34 @@ import elbadev.com.wordswords.util.IabResult;
 import elbadev.com.wordswords.util.Inventory;
 import elbadev.com.wordswords.util.Purchase;
 
-public class WordsWords extends AppCompatActivity implements IabBroadcastReceiver.IabBroadcastListener {
+public class WordsWords extends AppCompatActivity implements IabBroadcastReceiver.IabBroadcastListener ,CustomDialog.NoticeDialogListener {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private IabHelper mHelper;
     private IabBroadcastReceiver mBroadcastReceiver;
     private IInAppBillingService mService;
     private String prezzo_bigliettino = "";
+    private Boolean comprato_bigliettino = false;
+    private Boolean comprato_block_notes = false;
+    private Boolean comprato_fogli_di_carta = false;
     private String prezzo_fogli_di_carta = "";
     private String id_fogli_di_carta = "";
     private String id_bigliettino = "";
     private String id_block_notes = "";
     private String prezzo_block_notes;
 
+
+
+
 @Override
 public void onResume(){
     super.onResume();
-//    if(GlobalState.isLogout()){
-//        GlobalState.setLogout(false);
-//        RequestQueue mRequestQueue;
-//        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
-//        Network network = new BasicNetwork(new HurlStack());
-//        mRequestQueue = new RequestQueue(cache, network);
-//        mRequestQueue.start();
-//        GlobalState.getButtonSound().start();
-//        final TextView email = (TextView) findViewById(R.id.email);
-//        final TextView password = (TextView) findViewById(R.id.password);
-//        JSONObject postParam = new JSONObject();
-//        try {
-//            postParam.put("email", email.getText());
-//            postParam.put("password", password.getText());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        JSONObject pino = postParam;
-//        System.out.println("WORDSWORDS_LOG: JSON OUTPUT-> resume" + pino.toString());
-//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-//                Request.Method.POST,
-//                GlobalState.getAddress() + "login",
-//                pino,
-//                new Response.Listener<JSONObject>() {
-//
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            System.out.println("WORDSWORDS_LOG: Utente trovato:::::  " + response.getString("utente_trovato"));
-//                            if (response.getInt("utente_trovato") == 1) {
-//
-//                                GlobalState.setMia_email(email.getText().toString());
-//                                GlobalState.setMia_password(password.getText().toString());
-////                                      esistenza();
-//                                Intent i = new Intent(WordsWords.this, DashBoard.class);
-//                                GlobalState.setDesktop(i);
-//                                i.putExtra("token", response.getString("token"));
-//                                startActivity(i);
-//                                // salvo le credenziali nel DB
-//                                new InsertUser(GlobalState.getMia_email(),GlobalState.getMia_password()).execute(GlobalState.getDb());
-//                            } else {
-//                                customToast("Questo utente non esiste, puoi registrarti cliccando su REGISTRATI",Toast.LENGTH_LONG);
-////                                        Toast.makeText(WordsWords.this, " Utente non esistente ", Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                customToast("Prima inserisci Username e Password! Se le hai inserite potresti averle sbagliate.",Toast.LENGTH_LONG);
-////                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
-//                System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
-//
-//            }
-//        }) {
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("Content-Type", "application/json; charset=utf-8");
-//                return headers;
-//            }
-//        };
-//
-//        mRequestQueue.add(jsonObjReq);
-//
-//    }
 }
     @Override
     public void onBackPressed() {
         customToast(GlobalState.getRandomWisenessBackButton(),Toast.LENGTH_LONG);
         //super.onBackPressed();
     }
-
-
-    public void esistenza() {
-        System.out.println("WORDSWORDS_LOG: inizio volley alive");
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        final String url = "http://46.101.105.29/alive_w";
-
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-
-                            if (GlobalState.getPrima_esistenza()) {
-                                GlobalState.setDate_alive(response.getString("date_alive"));
-                                GlobalState.setPrima_esistenza(false);
-                            }
-
-                            System.out.println("WORDSWORDS_LOG: reboot nuova " + response.getString("date_alive") + " vecchia " + GlobalState.getDate_alive());
-                            if (!GlobalState.getDate_alive().equals(response.getString("date_alive"))) {
-                                GlobalState.setRebootta(true);
-                                System.out.println("WORDSWORDS_LOG: reboot volley  " + GlobalState.getRebootta());
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("WORDSWORDS_LOG: reboot Error.Response" + error.getMessage());
-                    }
-                }
-        );
-        if(GlobalState.getRichiesteVolleyInCorso()<3){
-            queue.add(getRequest);
-            GlobalState.setRichiesteVolleyInCorso(GlobalState.getRichiesteVolleyInCorso()+1);
-            System.out.println("WORDSWORDS_LOG: mando richiesta alive in coda");
-        }else{
-            queue.cancelAll(queue);
-            GlobalState.setRichiesteVolleyInCorso(0);
-            System.out.println("WORDSWORDS_LOG: ci so troppe cose nella coda di volley");
-        }
-        System.out.println("WORDSWORDS_LOG: fine volley alive");
-    }
-
-
-//        JSONObject postParam = new JSONObject();
-//
-//        JSONObject pino = postParam;
-//        System.out.println("WORDSWORDS_LOG: JSON OUTPUT->" + pino.toString());
-//
-//        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-//                Request.Method.POST,
-//                GlobalState.getAddress() + "alive",
-//                pino,
-//                new Response.Listener<JSONObject>() {
-//
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            System.out.println("WORDSWORDS_LOG: Risposta Alive :::::  "  + response.getString("date_alive"));
-//
-//                            GlobalState.setDate_alive(response.getString("date_alive"));
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(WordsWords.this, "A Puttane alive " + error.getMessage(), Toast.LENGTH_SHORT).show();
-//                System.out.println("WORDSWORDS_LOG: A Puttane alive " + error.getMessage());
-//                error.printStackTrace();
-//            }
-//        }) {
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("Content-Type", "application/json; charset=utf-8");
-//                return headers;
-//            }
-//        };
-//
-//        mRequestQueue.add(jsonObjReq);
 
     private Handler credentialHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -265,24 +111,23 @@ public void onResume(){
         }
     };
 
+    final ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
 
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            System.out.println("WORDSWORDS_LOG: Servizio connesso.");
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ServiceConnection mServiceConn = new ServiceConnection() {
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mService = null;
-            }
 
-            @Override
-            public void onServiceConnected(ComponentName name,
-                                           IBinder service) {
-                System.out.println("WORDSWORDS_LOG: Servizio connesso.");
-                mService = IInAppBillingService.Stub.asInterface(service);
-            }
-        };
 
 
 
@@ -383,9 +228,31 @@ public void onResume(){
                     System.out.println("WORDSWORDS_LOG: errore. " + result);
                     return;
                 }
+//                IabHelper.OnConsumeFinishedListener mConsumeFinishedListener =
+//                        new IabHelper.OnConsumeFinishedListener() {
+//                            public void onConsumeFinished(Purchase purchase, IabResult result) {
+//                                if (result.isSuccess()) {
+//                                    System.out.println("WORDSWORDS_LOG: inventario mangiato un bigliettino. " + result);
+//                                }
+//                                else {
+//                                    System.out.println("WORDSWORDS_LOG: inventario bigliettino di traverso. " + result);
+//                                }
+//                            }
+//                        };
+//                try {
+//                    mHelper.consumeAsync(inventory.getPurchase("bigliettino"), mConsumeFinishedListener);
+//                }catch (IabHelper.IabAsyncInProgressException i){
+//                    i.printStackTrace();
+//                }
 
                 System.out.println("WORDSWORDS_LOG: la query è un successone. " + result);
-                System.out.println("WORDSWORDS_LOG: inventario: " + inventory.getSkuDetails("fogli_di_carta"));
+                System.out.println("WORDSWORDS_LOG: inventario: " + inventory.hasPurchase("block_notes"));
+                System.out.println("WORDSWORDS_LOG: inventario: " + inventory.hasPurchase("fogli_di_carta"));
+                System.out.println("WORDSWORDS_LOG: inventario: " + inventory.hasPurchase("bigliettino"));
+                comprato_bigliettino = inventory.hasPurchase("bigliettino");
+                comprato_fogli_di_carta = inventory.hasPurchase("fogli_di_carta");
+                comprato_block_notes = inventory.hasPurchase("block_notes");
+                //se sul db il bigliettino é a 0 lo setto a 10, se é a 1 lo setto a 0 e lo consumo
 
             /*
              * Check for items we own. Notice that for each purchase, we check
@@ -505,6 +372,7 @@ public void onResume(){
                     Bundle buyIntentBundle = mService.getBuyIntent(3, "elbadev.com.wordswords",id_bigliettino, "inapp", "bigliettino");
                     PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
                     startIntentSenderForResult(pendingIntent.getIntentSender(),1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),Integer.valueOf(0));
+
                 }catch (RemoteException e){
                     e.printStackTrace();
                 }catch (IntentSender.SendIntentException e){
@@ -534,6 +402,7 @@ public void onResume(){
         Button btn_compra = (Button) findViewById(R.id.button_compra);
         btn_compra.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
                 System.out.println("WORDSWORDS_LOG: cliccato compra");
@@ -727,6 +596,9 @@ public void onResume(){
                 try {
                     postParam.put("email", email.getText());
                     postParam.put("password", password.getText());
+                    postParam.put("comprato_bigliettino", comprato_bigliettino);
+                    postParam.put("comprato_block_notes", comprato_block_notes);
+                    postParam.put("comprato_fogli_di_carta", comprato_fogli_di_carta);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -760,7 +632,8 @@ public void onResume(){
                                         startActivity(i);
                                         // salvo le credenziali nel DB
                                         new InsertUser(GlobalState.getMia_email(),GlobalState.getMia_password()).execute(GlobalState.getDb());
-                                    } else {
+                                    }
+                                    else {
                                         customToast("Questo utente non esiste, puoi registrarti cliccando su REGISTRATI",Toast.LENGTH_LONG);
 //                                        Toast.makeText(WordsWords.this, " Utente non esistente ", Toast.LENGTH_SHORT).show();
                                     }
@@ -773,10 +646,16 @@ public void onResume(){
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        customToast("Prima inserisci Username e Password! Se le hai inserite potresti averle sbagliate.",Toast.LENGTH_LONG);
-//                        Toast.makeText(WordsWords.this, "L'utente non esiste o il server non risponde.", Toast.LENGTH_SHORT).show();
-                        System.out.println("WORDSWORDS_LOG: A Puttane " + error.getMessage());
-
+                        String string_from_bytes = new String(error.networkResponse.data);
+                        if(string_from_bytes != null && string_from_bytes.contains("fine_partite_disponibili")){
+                            startBillings();
+                            CustomDialog customDialog = new CustomDialog();
+                            customDialog.show(getFragmentManager(),"CustomDialog");
+                            System.out.println("WORDSWORDS_LOG: volley fine risposta" + string_from_bytes );
+                        }else{
+                            customToast("Problema: controlla username e password.",Toast.LENGTH_LONG);
+                            System.out.println("WORDSWORDS_LOG: volley fine credentials problem" );
+                        }
                     }
                 }) {
 
@@ -809,12 +688,8 @@ public void onResume(){
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-
-                Intent serviceIntent =
-                        new Intent("com.android.vending.billing.InAppBillingService.BIND");
-                serviceIntent.setPackage("com.android.vending");
-                final boolean blnBind = bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-                System.out.println("WORDSWORDS_LOG: Servizio bindato." + String.valueOf(blnBind));
+                boolean res = startBillings();
+                System.out.println("WORDSWORDS_LOG: Servizio bindato." + String.valueOf(res));
                 super.onDrawerOpened(drawerView);
                 GlobalState.getTypewriter_paper_3().start();
 
@@ -823,6 +698,12 @@ public void onResume(){
 
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
+    }
+    private boolean startBillings(){
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        final boolean blnBind = bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        return blnBind;
     }
     boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
@@ -865,7 +746,14 @@ public void onResume(){
                 try {
                     JSONObject jo = new JSONObject(purchaseData);
                     String sku = jo.getString("productId");
-                    System.out.println("WORDSWORDS_LOG: You have bought the " + sku + ". Excellent choice,adventurer!");
+                    System.out.println("WORDSWORDS_LOG: hai comprato " + sku + ". ottima scelta!");
+                    if(sku.equals("bigliettino")){
+                        comprato_bigliettino = true;
+                    }else if(sku.equals("block_notes")){
+                        comprato_block_notes = true;
+                    }else if(sku.equals("fogli_di_carta")){
+                        comprato_fogli_di_carta = true;
+                    }
                 }
                 catch (JSONException e) {
                     System.out.println("WORDSWORDS_LOG: Failed to parse purchase data.");
@@ -891,5 +779,62 @@ public void onResume(){
         custom_toast.show();
     }
 
+        @Override
+        public void onDialogPositiveClick(CustomDialog dialog) {
+
+        final LinearLayout buy_panel = (LinearLayout) findViewById(R.id.buy_panel);
+        System.out.println("WORDSWORDS_LOG: dialog il click positivo é arrivato.");
+        buy_panel.setVisibility(LinearLayout.VISIBLE);
+        System.out.println("WORDSWORDS_LOG: chiedo di vedere il negozio di: " + getPackageName());
+        //questa va fatto in altro tred
+        UnDueTred tred = new UnDueTred(mService);
+        Bundle skuDetails = new Bundle();
+        skuDetails = tred.doInBackground();
+        //diotred
+        try {
+            int response = skuDetails.getInt("RESPONSE_CODE");
+            if (response == 0) {
+                ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
+                System.out.println("WORDSWORDS_LOG: entro nel negozio. numero oggetti: " + responseList.size());
+                for (String thisResponse : responseList) {
+                    JSONObject object = new JSONObject(thisResponse);
+                    String sku = object.getString("productId");
+                    String price = object.getString("price");
+                    if (sku.equals("bigliettino")) {
+                        prezzo_bigliettino = price;
+                        id_bigliettino = sku;
+                        System.out.println("WORDSWORDS_LOG: bigliettino. ID " + id_bigliettino + " PREZZO " + prezzo_bigliettino);
+                    } else if (sku.equals("fogli_di_carta")) {
+                        prezzo_fogli_di_carta = price;
+                        id_fogli_di_carta = sku;
+                        System.out.println("WORDSWORDS_LOG: fogli. ID " + id_fogli_di_carta + " PREZZO " + prezzo_fogli_di_carta);
+                    }else if (sku.equals("block_notes")) {
+                        prezzo_block_notes = price;
+                        id_block_notes = sku;
+                        System.out.println("WORDSWORDS_LOG: block notes. ID " + id_block_notes + " PREZZO " + prezzo_block_notes);
+                    }
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.closeDrawers();
+    }
+
+    @Override
+    public void onDialogNegativeClick(CustomDialog dialog) {
+        System.out.println("WORDSWORDS_LOG: dialog il click negativo é arrivato.");
+    }
+
+//    @Override
+//    public void onDialogPositiveClick(DialogFragment dialog) {
+//        System.out.println("WORDSWORDS_LOG: dialog il click positivo é arrivato.");
+//    }
+//
+//    @Override
+//    public void onDialogNegativeClick(DialogFragment dialog) {
+//        System.out.println("WORDSWORDS_LOG: dialog il click negativo é arrivato.");
+//    }
 }
 

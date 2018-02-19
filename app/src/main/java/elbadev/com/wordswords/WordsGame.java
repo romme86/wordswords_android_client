@@ -607,11 +607,16 @@ public class WordsGame extends Activity {
                     }
                 }
         });
+        edo.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                scelta.setEnabled(true);
+            }
+        });
         final IBinder binderino = getWindow().getDecorView().getWindowToken();
         final CountDownTimer il_mio_timer = new CountDownTimer(120000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                textTimer.setText("0:" + (millisUntilFinished/1000));
+                textTimer.setText("" + millisUntilFinished/1000);
                 if(millisUntilFinished/1000<=1){
                     GlobalState.getmSocket().emit("invio_scelta", edo.getText());
                     ProgressBar ld = (ProgressBar) findViewById(R.id.load);
@@ -648,6 +653,7 @@ public class WordsGame extends Activity {
                     System.out.println("WORDSWORDS_LOG: nascondo tastiera ");
                     hideKeyboard(v);
                 }
+                scelta.setEnabled(false);
             }
         });
 
