@@ -2,6 +2,7 @@ package elbadev.com.wordswords;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Ending extends Activity {
-
-
 
     @Override
     public void onBackPressed(){
@@ -28,7 +32,13 @@ public class Ending extends Activity {
     //   <<<<<<<<<   INIZIO LISTA EMETTITORI    >>>>>>>>>
 
 
-
+    //Esci dalla Partita
+    private Emitter.Listener on_chiudi_baracca = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
+        }
+    };
 
     //<<<<<<<<<   FINE LISTA EMETTITORI    >>>>>>>>>
 
@@ -50,13 +60,23 @@ public class Ending extends Activity {
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
                 GlobalState.setLogout(true);
-                GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
+                GlobalState.getmSocket().emit("voglio_uscire", "Maria, io esco...");
+
+               // GlobalState.setLogout(true);
+                //GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
             }
         });
 
 
         TextView tf = (TextView) findViewById(R.id.testo_fine);
         tf.setText(GlobalState.getVincitore()  + " con " + GlobalState.getPunti_vincitore() + " punti!!!");
+
+
+        //GESTIONE SOCKET
+
+        GlobalState.getmSocket().on("chiusura_partita", on_chiudi_baracca);
+
+
 
     }
     public void customToast(String text, int duration){
