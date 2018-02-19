@@ -204,7 +204,7 @@ public class Game extends Activity{
         @Override
         public void call(Object... args) {
             System.out.println("WORDSWORDS_LOG: Fine Partita");
-            finish();
+            //finish();
         }
     };
 
@@ -640,23 +640,24 @@ public class Game extends Activity{
         final Button bstart = (Button) findViewById(R.id.bottone_start);
 
         bstart.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-//                if(GlobalState.getAbbasta() == false) {
-//                    customToast("Per iniziare dovete essere almeno in quattro, elefanti che si dondolavano sopra il filo di una ragnatela...",Toast.LENGTH_LONG);
-//                }
-//                else
-//                {
-//
-//                    v.startAnimation(button_as);
-//                    GlobalState.getButtonSound().start();
-//                    GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
-//                    GlobalState.setAbbasta(false);
-//                }
-                v.startAnimation(button_as);
-                GlobalState.getButtonSound().start();
-                bstart.setEnabled(false);
-                GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
-                GlobalState.setAbbasta(false);
+                public void onClick(View v) {
+                   if(GlobalState.getAbbasta() == false) {
+                       customToast("Per iniziare dovete essere almeno in due, elefanti che si dondolavano sopra il filo di una ragnatela...",Toast.LENGTH_LONG);
+                    }
+                   else
+                   {
+
+                       v.startAnimation(button_as);
+                       GlobalState.getButtonSound().start();
+                       bstart.setEnabled(false);
+                       GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
+                       GlobalState.setAbbasta(false);
+                   }
+ //                    v.startAnimation(button_as);
+ //                    GlobalState.getButtonSound().start();
+ //                    bstart.setEnabled(false);
+ //                    GlobalState.getmSocket().emit("inizia_partita", GlobalState.getId_stanza_attuale());
+ //                    GlobalState.setAbbasta(false);
 
             }
         });

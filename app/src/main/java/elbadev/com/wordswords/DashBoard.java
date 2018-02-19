@@ -565,7 +565,7 @@ public class DashBoard extends Activity {
 
             }
         });
-    */
+*/
 
         //LOGOUT
         final Button bottone_logout = (Button) findViewById(R.id.button_logout);
