@@ -36,6 +36,7 @@ public class Ending extends Activity {
     private Emitter.Listener on_chiudi_baracca = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            System.out.println("WORDSWORDS_LOG: Chiudi Baracca da Ending ");
             GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
         }
     };
@@ -59,10 +60,11 @@ public class Ending extends Activity {
             public void onClick(View v) {
                 v.startAnimation(button_as);
                 GlobalState.getButtonSound().start();
-                GlobalState.setLogout(true);
+
                 GlobalState.getmSocket().emit("voglio_uscire", "Maria, io esco...");
 
-               // GlobalState.setLogout(true);
+
+               GlobalState.setLogout(true);
                 //GlobalState.getmSocket().emit("distruggi_partita", GlobalState.getId_stanza_attuale());
             }
         });
